@@ -325,6 +325,36 @@
       background: #ffffff;
     }
 
+    /* Q1·Q2 입력 상태: 기존 파란색 계열을 명시적으로 유지 */
+    [data-q="1"] input:focus,
+    [data-q="2"] input:focus {
+      border-color: #0284c7 !important;
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15) !important;
+      background-color: #ffffff !important;
+    }
+
+    [data-q="1"] input:-webkit-autofill,
+    [data-q="2"] input:-webkit-autofill,
+    [data-q="1"] input:autofill,
+    [data-q="2"] input:autofill {
+      -webkit-box-shadow: 0 0 0 1000px #e0f2fe inset !important;
+      box-shadow: 0 0 0 1000px #e0f2fe inset !important;
+      -webkit-text-fill-color: #0f172a !important;
+      caret-color: #0284c7;
+      border-color: #93c5fd !important;
+    }
+
+    [data-q="1"] .custom-select-trigger.active {
+      border-color: #0284c7 !important;
+      background: #e0f2fe !important;
+      color: #0284c7 !important;
+    }
+
+    [data-q="1"] .custom-option.selected {
+      background: #e0f2fe !important;
+      color: #0284c7 !important;
+    }
+
     textarea {
       resize: vertical;
       min-height: 110px;
@@ -929,8 +959,8 @@
           <div class="q-sub">아이디어 수준부터 양산 실증 단계까지 최적 정부지원금 매칭 트랙을 결정합니다 (1개 선택).</div>
         </div>
         <div class="mini-chips">
-          <label class="mini-chip active">
-            <input type="radio" name="trl" value="TRL 1~2단계 (기초연구/아이디어)" checked required>
+          <label class="mini-chip">
+            <input type="radio" name="trl" value="TRL 1~2단계 (기초연구/아이디어)" required>
             <span class="chip-bullet"></span>
             <span>TRL 1~2단계 (기초연구)</span>
           </label>
@@ -962,8 +992,8 @@
           <div class="q-sub">소프트웨어/플랫폼 vs 하드웨어 회로/기구설계 본문 분기를 결정합니다.</div>
         </div>
         <div class="mini-chips" id="targetTypeChips">
-          <label class="mini-chip active">
-            <input type="radio" name="targetType" value="순수 S/W · 플랫폼 · 웹/앱 · SaaS" checked required>
+          <label class="mini-chip">
+            <input type="radio" name="targetType" value="순수 S/W · 플랫폼 · 웹/앱 · SaaS" required>
             <span class="chip-bullet"></span>
             <span>순수 S/W·SaaS</span>
           </label>
@@ -1128,12 +1158,12 @@
         </div>
         <div class="grid-2col">
           <div class="field-box">
-            <label>핵심 정량 성능목표치 (KPI)</label>
-            <input type="text" name="kpiTarget" placeholder="예: 인식 정확도 98.5% 이상, 지연시간 50ms 이하" class="track-input">
+            <label>핵심 정량 성능목표치 (KPI) <span class="req">*</span></label>
+            <input type="text" name="kpiTarget" required placeholder="예: 인식 정확도 98.5% 이상, 지연시간 50ms 이하" class="track-input">
           </div>
           <div class="field-box">
-            <label>보유 특허 및 지식재산권 현황</label>
-            <input type="text" name="patentInfo" placeholder="예: 등록특허 1건(10-xxxx), 출원 2건, 특허 없음" class="track-input">
+            <label>보유 특허 및 지식재산권 현황 <span class="req">*</span></label>
+            <input type="text" name="patentInfo" required placeholder="예: 등록특허 1건(10-xxxx), 출원 2건, 특허 없음" class="track-input">
           </div>
         </div>
         <div class="field-box" style="margin-top:0.85rem;">
@@ -1301,8 +1331,8 @@
               <input type="checkbox" name="perks" value="비수도권 / 규제자유특구 / 고용위기지역 입주기업">
               <span>비수도권 / 특구 입주</span>
             </label>
-            <label class="mini-chip active">
-              <input type="checkbox" name="perks" value="세금체납 및 채무불이행 없음 (필수 자격)" checked>
+            <label class="mini-chip">
+              <input type="checkbox" name="perks" value="세금체납 및 채무불이행 없음 (필수 자격)">
               <span>국세·지방세 완납 (필수)</span>
             </label>
           </div>
@@ -1345,6 +1375,20 @@
   </div>
 
   <script>
+    // 설립일자: 숫자 8자리를 YYYY-MM-DD 형식으로 화면에 표시
+    const estDateInput = document.querySelector('input[name="estDate"]');
+    if (estDateInput) {
+      estDateInput.setAttribute('inputmode', 'numeric');
+      estDateInput.setAttribute('maxlength', '10');
+      estDateInput.addEventListener('input', () => {
+        const digits = estDateInput.value.replace(/\D/g, '').slice(0, 8);
+        let formatted = digits.slice(0, 4);
+        if (digits.length > 4) formatted += '-' + digits.slice(4, 6);
+        if (digits.length > 6) formatted += '-' + digits.slice(6, 8);
+        estDateInput.value = formatted;
+      });
+    }
+
     // ----------------------------------------------------
     // 커스텀 드롭다운 핸들러
     // ----------------------------------------------------
@@ -1405,18 +1449,20 @@
       const q1Inputs = document.querySelectorAll('[data-q="1"] input');
       let q1Filled = 0;
       q1Inputs.forEach(i => { if (i.value.trim()) q1Filled++; });
-      if (q1Filled >= 3) answered++;
+      if (q1Filled === q1Inputs.length) answered++;
 
       const q2Inputs = document.querySelectorAll('[data-q="2"] input');
       let q2Filled = 0;
       q2Inputs.forEach(i => { if (i.value.trim()) q2Filled++; });
-      if (q2Filled >= 2) answered++;
+      if (q2Filled === q2Inputs.length) answered++;
 
       if (document.querySelector('input[name="trl"]:checked')) answered++;
-      if (document.querySelector('input[name="targetType"]:checked')) answered++;
+      const selectedTargetType = document.querySelector('input[name="targetType"]:checked');
+      const targetTypeCustom = document.querySelector('input[name="targetTypeCustom"]');
+      if (selectedTargetType && (selectedTargetType.value !== '기타 직접입력' || (targetTypeCustom && targetTypeCustom.value.trim()))) answered++;
 
       const techSummary = document.querySelector('textarea[name="techSummary"]');
-      if (techSummary && techSummary.value.trim().length >= 10) answered++;
+      if (techSummary && techSummary.value.trim()) answered++;
 
       const diffFactor = document.querySelector('input[name="diffFactor"]');
       if (diffFactor && diffFactor.value) answered++;
@@ -1425,8 +1471,13 @@
       const pocStatus = document.querySelector('input[name="pocStatus"]');
       if (targetMarket && targetMarket.value && pocStatus && pocStatus.value) answered++;
 
+      const kpiTarget = document.querySelector('input[name="kpiTarget"]');
+      const patentInfo = document.querySelector('input[name="patentInfo"]');
       const kolasPlan = document.querySelector('input[name="kolasPlan"]');
-      if (kolasPlan && kolasPlan.value) answered++;
+      const kolasCustom = document.querySelector('input[name="kolasCustom"]');
+      const kolasComplete = kolasPlan && kolasPlan.value &&
+        (kolasPlan.value !== '기타 시험인증 직접입력' || (kolasCustom && kolasCustom.value.trim()));
+      if (kpiTarget && kpiTarget.value.trim() && patentInfo && patentInfo.value.trim() && kolasComplete) answered++;
 
       const fundingScale = document.querySelector('input[name="fundingScale"]');
       const researchCrew = document.querySelector('input[name="researchCrew"]');
@@ -1569,6 +1620,55 @@
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+
+      // Q10을 제외한 Q1~Q9의 모든 세부 입력 항목 필수 확인
+      let firstMissing = null;
+      for (let q = 1; q <= 9 && !firstMissing; q++) {
+        const qItem = document.querySelector(`[data-q="${q}"]`);
+        if (!qItem) continue;
+
+        const controls = qItem.querySelectorAll('input, textarea, select');
+        const checkedRadioGroups = new Set();
+
+        for (const control of controls) {
+          if (control.type === 'radio') {
+            if (checkedRadioGroups.has(control.name)) continue;
+            checkedRadioGroups.add(control.name);
+            if (!qItem.querySelector(`input[type="radio"][name="${control.name}"]:checked`)) {
+              firstMissing = control;
+              break;
+            }
+          } else if (control.type === 'hidden') {
+            if (control.closest('.custom-select-wrapper') && !control.value.trim()) {
+              firstMissing = control;
+              break;
+            }
+          } else if (control.closest('.custom-box') && !control.closest('.custom-box').classList.contains('open')) {
+            continue;
+          } else if (control.type !== 'checkbox' && !control.value.trim()) {
+            firstMissing = control;
+            break;
+          }
+        }
+      }
+
+      if (firstMissing) {
+        statusMsg.className = "status-msg loading";
+        statusMsg.textContent = "Q1~Q9의 모든 세부 항목을 입력하거나 선택해 주세요. Q10은 선택 사항입니다.";
+        const customWrapper = firstMissing.closest('.custom-select-wrapper');
+        if (customWrapper) {
+          const trigger = customWrapper.querySelector('.custom-select-trigger');
+          const panel = customWrapper.querySelector('.custom-options-panel');
+          panel.classList.add('open');
+          trigger.classList.add('active');
+          customWrapper.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+          firstMissing.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          firstMissing.focus();
+          if (firstMissing.reportValidity) firstMissing.reportValidity();
+        }
+        return;
+      }
 
       const perks = [];
       if (perksNoneInput.checked) {
