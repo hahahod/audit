@@ -1534,7 +1534,7 @@
     
     const MAKE_WEBHOOK_URL = "https://hook.eu2.make.com/0k0hodm1rqbhixq0fn419x3msl596dnw";
 
-    form.addEventListener('submit', async (e) => {
+    form.getElementById('techAuditForm').addEventListener('submit', async (e) => {
       e.preventDefault();
 
       const perks = [];
@@ -1615,14 +1615,17 @@
         spinner.style.display = "none";
       };
 
+      // 표준 JSON 페이로드를 전달하여 Make 웹훅이 각 필드를 완벽하게 분리(파싱)하도록 수정
       fetch(MAKE_WEBHOOK_URL, {
         method: "POST",
-        mode: "no-cors",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
-      }).catch(err => console.warn(err));
-
-      setTimeout(finishSubmission, 2000);
+      }).then(() => {
+        finishSubmission();
+      }).catch(err => {
+        console.warn(err);
+        finishSubmission();
+      });
     });
 
     calculateProgress();
