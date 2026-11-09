@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-  <title>CONVERGENCY | AI 기반 R&D 기술자산 진단 및 핀포인트 과제 매칭 v2.3.0</title>
-  <meta property="og:title" content="CONVERGENCY AI R&D 진단 v2.3.0">
+  <title>CONVERGENCY | AI 기반 R&D 기술자산 진단 및 핀포인트 과제 매칭</title>
+  <meta property="og:title" content="CONVERGENCY AI R&D 진단">
   <meta property="og:description" content="AI 국가 공공 R&D 기술자산 진단 및 핀포인트 정부지원사업 매칭 솔루션">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -832,7 +832,7 @@
 
   <div class="container">
     <div class="header-box">
-      <div class="ver-badge">REAL-TIME TECH ASSET AUDIT v2.3.0</div>
+      <div class="ver-badge">REAL-TIME TECH ASSET AUDIT</div>
       <h1>AI 국가 공공 R&D 기술진단 및 핀포인트 과제 매칭</h1>
       <p class="subtitle">신청 기업의 무형 노하우를 공학적 R&D 과제로 치환하고, 2026년 정부 R&D 최적 지원사업 3선을 핀포인트로 매칭 판정합니다.</p>
     </div>
@@ -865,7 +865,7 @@
           </div>
           <div class="field-box">
             <label>설립일자 <span class="req">*</span></label>
-            <input type="date" name="estDate" required class="track-input">
+            <input type="text" name="estDate" required placeholder="YYYY-MM-DD" class="track-input" onfocus="(this.type='date')" onblur="if(!this.value)this.type='text'">
           </div>
           <div class="field-box">
             <label>최근 연간 매출액 규모 <span class="req">*</span></label>
@@ -908,7 +908,7 @@
           </div>
           <div class="field-box" style="grid-column: 1 / -1;">
             <label>수신 이메일 주소 <span class="req">*</span></label>
-            <input type="email" name="contactEmail" required placeholder="contact@convergency.co.kr" class="track-input">
+            <input type="email" name="contactEmail" required placeholder="example@email.com" class="track-input">
           </div>
         </div>
       </div>
