@@ -864,28 +864,27 @@
             <input type="text" name="bizNo" required placeholder="000-00-00000" class="track-input">
           </div>
           <div class="field-box">
-        <label>설립일자 <span class="req">*</span></label>
-        <input type="text" name="estDate" required placeholder="YYYY-MM-DD" class="track-input" onclick="this.type='date'; this.showPicker && this.showPicker();" onblur="if(!this.value){this.type='text';}">
-      </div>
-          </div>
-          <div class="field-box">
-            <label>최근 연간 매출액 규모 <span class="req">*</span></label>
-            <div class="custom-select-wrapper" data-name="revenueScale">
-              <input type="hidden" name="revenueScale" class="track-input" required>
-              <div class="custom-select-trigger">
-                <span class="selected-text">눌러서 매출 구간 선택</span>
-                <span class="custom-select-arrow"></span>
-              </div>
-              <div class="custom-options-panel">
-                <div class="custom-option" data-value="매출 없음 (Pre-Revenue / 창업 초기)">매출 없음 (Pre-Revenue / 창업 초기)</div>
-                <div class="custom-option" data-value="1억 원 미만">1억 원 미만</div>
-                <div class="custom-option" data-value="1억 원 이상 ~ 5억 원 미만">1억 원 이상 ~ 5억 원 미만</div>
-                <div class="custom-option" data-value="5억 원 이상 ~ 20억 원 미만">5억 원 이상 ~ 20억 원 미만</div>
-                <div class="custom-option" data-value="20억 원 이상 ~ 50억 원 미만">20억 원 이상 ~ 50억 원 미만</div>
-                <div class="custom-option" data-value="50억 원 이상 (중기업·중견 도약)">50억 원 이상 (중기업·중견 도약)</div>
-              </div>
+          <label>설립일자 <span class="req">*</span></label>
+          <input type="text" name="estDate" required placeholder="YYYY-MM-DD" class="track-input" onclick="this.type='date'; this.showPicker && this.showPicker();" onblur="if(!this.value){this.type='text';}">
+        </div>
+        <div class="field-box">
+          <label>최근 연간 매출액 규모 <span class="req">*</span></label>
+          <div class="custom-select-wrapper" data-name="revenueScale">
+            <input type="hidden" name="revenueScale" class="track-input" required>
+            <div class="custom-select-trigger">
+              <span class="selected-text">눌러서 매출 구간 선택</span>
+              <span class="custom-select-arrow"></span>
+            </div>
+            <div class="custom-options-panel">
+              <div class="custom-option" data-value="매출 없음 (Pre-Revenue / 창업 초기)">매출 없음 (Pre-Revenue / 창업 초기)</div>
+              <div class="custom-option" data-value="1억 원 미만">1억 원 미만</div>
+              <div class="custom-option" data-value="1억 원 이상 ~ 5억 원 미만">1억 원 이상 ~ 5억 원 미만</div>
+              <div class="custom-option" data-value="5억 원 이상 ~ 20억 원 미만">5억 원 이상 ~ 20억 원 미만</div>
+              <div class="custom-option" data-value="20억 원 이상 ~ 50억 원 미만">20억 원 이상 ~ 50억 원 미만</div>
+              <div class="custom-option" data-value="50억 원 이상 (중기업·중견 도약)">50억 원 이상 (중기업·중견 도약)</div>
             </div>
           </div>
+        </div>
         </div>
       </div>
 
