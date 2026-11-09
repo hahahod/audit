@@ -1,1416 +1,1389 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-  <title>CONVERGENCY | AI 기반 R&D 기술자산 진단 및 핀포인트 과제 매칭 v2.3.0</title>
-  <meta property="og:title" content="CONVERGENCY AI R&D 진단 v2.3.0">
-  <meta property="og:description" content="AI 국가 공공 R&D 기술자산 진단 및 핀포인트 정부지원사업 매칭 솔루션">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #f8fafc;
-      --card-bg: #ffffff;
-      --card-border: #e2e8f0;
-      --q-bg: #f8fafc;
-      --q-border: #cbd5e1;
-      
-      --sky: #0284c7;
-      --sky-hover: #0369a1;
-      --sky-soft: #e0f2fe;
-      --sky-border: #93c5fd;
-      
-      --text-main: #0f172a;
-      --text-sub: #334155;
-      --text-muted: #64748b;
-      
-      --dropdown-bg: #ffffff;
-      --dropdown-border: #cbd5e1;
-      
-      --danger: #ef4444;
-      --success-bg: #ecfdf5;
-      --success-border: #6ee7b7;
-      --success-text: #065f46;
-      
-      --radius-sm: 8px;
-      --radius-md: 12px;
-      --radius-lg: 16px;
-      --shadow-card: 0 4px 20px rgba(15, 23, 42, 0.06);
-      --transition: all 0.16s ease;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-      word-break: keep-all;
-      overflow-wrap: break-word;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    body {
-      background-color: var(--bg);
-      color: var(--text-main);
-      line-height: 1.55;
-      padding: 1.2rem 0.9rem 4.5rem 0.9rem;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      -webkit-text-size-adjust: 100%;
-    }
-
-    /* 실시간 진행률 상단 고정 바 */
-    .sticky-progress-wrap {
-      position: sticky;
-      top: 0.6rem;
-      z-index: 100;
-      max-width: 840px;
-      width: 100%;
-      background: rgba(255, 255, 255, 0.98);
-      backdrop-filter: blur(8px);
-      border: 1.5px solid var(--sky-border);
-      border-radius: var(--radius-md);
-      padding: 0.75rem 1.1rem;
-      box-shadow: 0 6px 18px rgba(2, 132, 199, 0.12);
-      margin-bottom: 1.2rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.45rem;
-    }
-
-    .progress-one-line {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 0.6rem;
-      font-size: 0.88rem;
-      font-weight: 700;
-      flex-wrap: wrap;
-    }
-
-    .progress-title-nowrap {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      color: var(--sky);
-      font-weight: 800;
-    }
-
-    .progress-stat-nowrap {
-      font-size: 0.84rem;
-      color: var(--text-sub);
-      white-space: nowrap;
-    }
-
-    .progress-stat-nowrap b {
-      color: var(--sky);
-      font-size: 0.96rem;
-      margin-left: 0.15rem;
-    }
-
-    .progress-track {
-      width: 100%;
-      height: 8px;
-      background: #e2e8f0;
-      border-radius: 9999px;
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #38bdf8, #0284c7);
-      border-radius: 9999px;
-      transition: width 0.35s ease;
-    }
-
-    /* 메인 컨테이너 */
-    .container {
-      max-width: 840px;
-      width: 100%;
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: var(--radius-lg);
-      padding: 2.2rem 2rem;
-      box-shadow: var(--shadow-card);
-    }
-
-    .header-box {
-      border-bottom: 1.5px solid #e2e8f0;
-      padding-bottom: 1.4rem;
-      margin-bottom: 1.8rem;
-    }
-
-    .ver-badge {
-      display: inline-flex;
-      align-items: center;
-      padding: 0.28rem 0.75rem;
-      background: var(--sky-soft);
-      border: 1px solid var(--sky-border);
-      border-radius: 9999px;
-      font-size: 0.75rem;
-      font-weight: 800;
-      color: var(--sky);
-      margin-bottom: 0.65rem;
-      letter-spacing: 0.02em;
-    }
-
-    h1 {
-      font-size: 1.8rem;
-      font-weight: 900;
-      letter-spacing: -0.025em;
-      color: var(--text-main);
-      margin-bottom: 0.5rem;
-      line-height: 1.35;
-    }
-
-    .subtitle {
-      font-size: 0.94rem;
-      color: var(--text-muted);
-      line-height: 1.6;
-    }
-
-    .sec-row {
-      display: flex;
-      align-items: center;
-      gap: 0.65rem;
-      margin: 2.2rem 0 1.1rem 0;
-      padding-bottom: 0.5rem;
-      border-bottom: 1.5px solid #e2e8f0;
-    }
-    .sec-row:first-of-type {
-      margin-top: 0.2rem;
-    }
-
-    .sec-badge {
-      width: 26px;
-      height: 26px;
-      border-radius: 8px;
-      background: var(--sky);
-      color: #fff;
-      font-size: 0.82rem;
-      font-weight: 900;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .sec-title {
-      font-size: 1.16rem;
-      font-weight: 800;
-      color: var(--text-main);
-      letter-spacing: -0.01em;
-    }
-
-    .q-item {
-      background: var(--q-bg);
-      border: 1px solid var(--q-border);
-      border-radius: var(--radius-md);
-      padding: 1.3rem 1.4rem;
-      margin-bottom: 1.25rem;
-      transition: var(--transition);
-    }
-    .q-item:focus-within {
-      border-color: var(--sky-border);
-      background: #ffffff;
-      box-shadow: 0 4px 16px rgba(2, 132, 199, 0.06);
-    }
-
-    .q-head {
-      margin-bottom: 0.95rem;
-    }
-
-    .q-title-row {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.5rem;
-      font-size: 1.04rem;
-      font-weight: 800;
-      color: var(--text-main);
-      line-height: 1.45;
-      flex-wrap: wrap;
-    }
-
-    .q-tag {
-      background: var(--sky-soft);
-      color: var(--sky);
-      border: 1px solid var(--sky-border);
-      border-radius: 6px;
-      padding: 0.15rem 0.45rem;
-      font-size: 0.76rem;
-      font-weight: 900;
-      flex-shrink: 0;
-      margin-top: 0.1rem;
-    }
-
-    .q-title-row .req {
-      color: var(--danger);
-      margin-left: 0.15rem;
-    }
-
-    .q-sub {
-      font-size: 0.84rem;
-      color: var(--text-muted);
-      margin-top: 0.35rem;
-      line-height: 1.5;
-    }
-
-    .guide-callout {
-      background: #f1f5f9;
-      border-left: 4px solid var(--sky);
-      border-radius: var(--radius-sm);
-      padding: 0.85rem 1.05rem;
-      margin-bottom: 0.95rem;
-      font-size: 0.83rem;
-      color: var(--text-sub);
-      line-height: 1.55;
-    }
-    .guide-callout b {
-      color: var(--sky);
-    }
-    .guide-list {
-      margin-top: 0.4rem;
-      padding-left: 1.15rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-      font-size: 0.81rem;
-      color: var(--text-muted);
-    }
-
-    .grid-2col {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 1rem;
-    }
-
-    .field-box {
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-      min-width: 0;
-    }
-    .field-box label {
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: var(--text-sub);
-    }
-
-    input[type="text"],
-    input[type="tel"],
-    input[type="email"],
-    input[type="date"],
-    textarea {
-      width: 100%;
-      background: #ffffff;
-      border: 1.5px solid var(--dropdown-border);
-      border-radius: var(--radius-sm);
-      padding: 0.75rem 0.95rem;
-      font-size: 16px;
-      color: var(--text-main);
-      outline: none;
-      transition: var(--transition);
-      min-height: 46px;
-    }
-
-    input:focus,
-    textarea:focus {
-      border-color: var(--sky);
-      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
-      background: #ffffff;
-    }
-
-    textarea {
-      resize: vertical;
-      min-height: 110px;
-      line-height: 1.6;
-    }
-
-    /* 커스텀 드롭다운 */
-    .custom-select-wrapper {
-      position: relative;
-      user-select: none;
-      width: 100%;
-    }
-
-    .custom-select-trigger {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      width: 100%;
-      min-height: 46px;
-      background: #ffffff;
-      border: 1.5px solid var(--dropdown-border);
-      border-radius: var(--radius-sm);
-      padding: 0.75rem 0.95rem;
-      font-size: 0.9rem;
-      color: var(--text-main);
-      cursor: pointer;
-      transition: var(--transition);
-      gap: 0.5rem;
-    }
-
-    .custom-select-trigger .selected-text {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      min-width: 0;
-    }
-
-    .custom-select-trigger:hover {
-      border-color: var(--sky);
-    }
-
-    .custom-select-trigger.active {
-      border-color: var(--sky);
-      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
-    }
-
-    .custom-select-arrow {
-      width: 8px;
-      height: 8px;
-      border-right: 2px solid var(--sky);
-      border-bottom: 2px solid var(--sky);
-      transform: rotate(45deg);
-      transition: transform 0.2s ease;
-      flex-shrink: 0;
-    }
-
-    .custom-select-trigger.active .custom-select-arrow {
-      transform: rotate(-135deg);
-    }
-
-    .custom-options-panel {
-      position: absolute;
-      top: calc(100% + 5px);
-      left: 0;
-      right: 0;
-      background: #ffffff;
-      border: 1px solid var(--card-border);
-      border-radius: var(--radius-md);
-      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.15);
-      z-index: 50;
-      max-height: 240px;
-      overflow-y: auto;
-      display: none;
-    }
-
-    .custom-options-panel.open {
-      display: block;
-      animation: fadeIn 0.15s ease;
-    }
-
-    .custom-optgroup-label {
-      padding: 0.5rem 0.95rem;
-      font-size: 0.76rem;
-      font-weight: 800;
-      color: var(--sky);
-      background: #f1f5f9;
-      border-bottom: 1px solid #e2e8f0;
-    }
-
-    .custom-option {
-      padding: 0.75rem 0.95rem;
-      font-size: 0.86rem;
-      color: var(--text-main);
-      cursor: pointer;
-      transition: background 0.12s ease;
-      border-bottom: 1px solid #f1f5f9;
-      line-height: 1.4;
-    }
-
-    .custom-option:last-child {
-      border-bottom: none;
-    }
-
-    .custom-option:hover,
-    .custom-option.selected {
-      background: var(--sky-soft);
-      color: var(--sky);
-      font-weight: 700;
-    }
-
-    /* 마이크로 칩 */
-    .mini-chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.45rem;
-    }
-
-    .mini-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      padding: 0.45rem 0.8rem;
-      background: #ffffff;
-      border: 1.5px solid var(--dropdown-border);
-      border-radius: 9999px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: var(--text-sub);
-      cursor: pointer;
-      user-select: none;
-      transition: var(--transition);
-      line-height: 1.35;
-      max-width: 100%;
-      min-height: 38px;
-    }
-
-    .mini-chip input {
-      display: none;
-    }
-
-    .mini-chip:hover {
-      background: var(--sky-soft);
-      border-color: var(--sky-border);
-      color: var(--text-main);
-    }
-
-    .mini-chip.active {
-      background: var(--sky-soft);
-      border-color: var(--sky);
-      color: var(--sky);
-      font-weight: 800;
-    }
-
-    .chip-bullet {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: #94a3b8;
-      flex-shrink: 0;
-      transition: var(--transition);
-    }
-    .mini-chip.active .chip-bullet {
-      background: var(--sky);
-      transform: scale(1.2);
-    }
-
-    .custom-box {
-      margin-top: 0.75rem;
-      display: none;
-    }
-    .custom-box.open {
-      display: block;
-      animation: fadeIn 0.2s ease;
-    }
-
-    /* 가점 버튼 */
-    .perks-none-btn {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      background: #ffffff;
-      border: 1.8px dashed #cbd5e1;
-      border-radius: var(--radius-sm);
-      padding: 0.75rem 0.95rem;
-      cursor: pointer;
-      font-size: 0.83rem;
-      font-weight: 700;
-      color: var(--text-main);
-      margin-bottom: 0.8rem;
-      transition: var(--transition);
-      line-height: 1.4;
-    }
-    .perks-none-btn:hover {
-      border-color: var(--sky);
-      background: var(--sky-soft);
-    }
-    .perks-none-btn.active {
-      border: 1.8px solid var(--sky);
-      background: var(--sky-soft);
-      color: var(--sky);
-    }
-    .perks-none-btn input {
-      accent-color: var(--sky);
-      cursor: pointer;
-      width: 16px;
-      height: 16px;
-      flex-shrink: 0;
-    }
-
-    .perks-expander-btn {
-      width: 100%;
-      background: #ffffff;
-      border: 1.5px solid var(--q-border);
-      border-radius: var(--radius-sm);
-      padding: 0.65rem;
-      font-size: 0.81rem;
-      font-weight: 700;
-      color: var(--sky);
-      cursor: pointer;
-      margin-top: 0.75rem;
-      transition: var(--transition);
-    }
-    .perks-expander-btn:hover {
-      background: var(--sky-soft);
-      border-color: var(--sky-border);
-    }
-
-    .perks-hidden-tray {
-      display: none;
-      margin-top: 0.75rem;
-      padding-top: 0.75rem;
-      border-top: 1.5px dashed var(--q-border);
-    }
-    .perks-hidden-tray.open {
-      display: block;
-      animation: fadeIn 0.2s ease;
-    }
-
-    /* 파일 업로드 */
-    .file-upload-box {
-      border: 2px dashed var(--sky-border);
-      background: #f0f9ff;
-      border-radius: var(--radius-md);
-      padding: 1.4rem 1.1rem;
-      text-align: center;
-      cursor: pointer;
-      transition: var(--transition);
-      position: relative;
-    }
-    .file-upload-box:hover {
-      background: #e0f2fe;
-      border-color: var(--sky);
-    }
-    .file-upload-box input[type="file"] {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      opacity: 0;
-      cursor: pointer;
-    }
-    .file-label-main {
-      font-size: 0.92rem;
-      font-weight: 800;
-      color: var(--sky);
-      margin-bottom: 0.35rem;
-      line-height: 1.4;
-    }
-    .file-label-sub {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      line-height: 1.4;
-    }
-    .file-chosen-indicator {
-      margin-top: 0.7rem;
-      font-size: 0.84rem;
-      font-weight: 800;
-      color: #065f46;
-      display: none;
-      word-break: break-all;
-      background: #d1fae5;
-      padding: 0.4rem 0.8rem;
-      border-radius: var(--radius-sm);
-    }
-
-    /* 제출 영역 */
-    .submit-area {
-      margin-top: 2.2rem;
-      padding-top: 1.6rem;
-      border-top: 1.5px solid #e2e8f0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.85rem;
-      width: 100%;
-    }
-
-    .btn-submit {
-      width: 100%;
-      max-width: 520px;
-      padding: 1.05rem 1.4rem;
-      background: linear-gradient(135deg, #0284c7, #0369a1);
-      border: none;
-      border-radius: var(--radius-md);
-      color: #ffffff;
-      font-size: 1rem;
-      font-weight: 800;
-      letter-spacing: -0.01em;
-      cursor: pointer;
-      box-shadow: 0 6px 18px rgba(2, 132, 199, 0.28);
-      transition: var(--transition);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.55rem;
-      text-align: center;
-      line-height: 1.45;
-      white-space: normal;
-      word-break: keep-all;
-      min-height: 52px;
-    }
-
-    .btn-submit:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(2, 132, 199, 0.38);
-      background: linear-gradient(135deg, #0369a1, #075985);
-    }
-
-    .btn-submit:disabled {
-      opacity: 0.85;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .spinner {
-      width: 20px;
-      height: 20px;
-      border: 2.5px solid rgba(255, 255, 255, 0.35);
-      border-top-color: #ffffff;
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-      display: none;
-      flex-shrink: 0;
-    }
-
-    .status-msg {
-      font-size: 0.88rem;
-      font-weight: 600;
-      display: none;
-      padding: 0.95rem 1.25rem;
-      border-radius: var(--radius-md);
-      text-align: center;
-      max-width: 520px;
-      width: 100%;
-      line-height: 1.6;
-      animation: fadeIn 0.25s ease;
-    }
-    .status-msg.loading {
-      display: block;
-      background: #f1f5f9;
-      border: 1px solid #cbd5e1;
-      color: #334155;
-    }
-    .status-msg.success {
-      display: block;
-      background: var(--success-bg);
-      border: 1.5px solid var(--success-border);
-      color: var(--success-text);
-      font-weight: 800;
-      box-shadow: 0 4px 14px rgba(5, 150, 105, 0.12);
-    }
-
-    @keyframes spin { to { transform: rotate(360deg); } }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
-
-    @media (max-width: 640px) {
-      body { padding: 0.6rem 0.5rem 3.5rem 0.5rem; }
-      .sticky-progress-wrap { top: 0.4rem; padding: 0.6rem 0.85rem; margin-bottom: 0.85rem; }
-      .container { padding: 1.4rem 0.95rem; }
-      h1 { font-size: 1.42rem; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+<title>CONVERGENCY | AI 기반 R&D 기술자산 진단 및 핀포인트 과제 매칭</title>
+<meta property="og:title" content="CONVERGENCY AI R&D 진단">
+<meta property="og:description" content="AI 국가 공공 R&D 기술자산 진단 및 핀포인트 정부지원사업 매칭 솔루션">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+--bg: #f8fafc;
+--card-bg: #ffffff;
+--card-border: #e2e8f0;
+--q-bg: #f8fafc;
+--q-border: #cbd5e1;
+--sky: #0284c7;
+--sky-hover: #0369a1;
+--sky-soft: #e0f2fe;
+--sky-border: #93c5fd;
+--text-main: #0f172a;
+--text-sub: #334155;
+--text-muted: #64748b;
+--dropdown-bg: #ffffff;
+--dropdown-border: #cbd5e1;
+--danger: #ef4444;
+--success-bg: #ecfdf5;
+--success-border: #6ee7b7;
+--success-text: #065f46;
+--radius-sm: 8px;
+--radius-md: 12px;
+--radius-lg: 16px;
+--shadow-card: 0 4px 20px rgba(15, 23, 42, 0.06);
+--transition: all 0.16s ease;
+}
+* {
+box-sizing: border-box;
+margin: 0;
+padding: 0;
+font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+word-break: keep-all;
+overflow-wrap: break-word;
+-webkit-tap-highlight-color: transparent;
+}
+body {
+background-color: var(--bg);
+color: var(--text-main);
+line-height: 1.55;
+padding: 1.2rem 0.9rem 4.5rem 0.9rem;
+min-height: 100vh;
+display: flex;
+flex-direction: column;
+align-items: center;
+-webkit-text-size-adjust: 100%;
+}
+.sticky-progress-wrap {
+position: sticky;
+top: 0.6rem;
+z-index: 100;
+max-width: 840px;
+width: 100%;
+background: rgba(255, 255, 255, 0.98);
+backdrop-filter: blur(8px);
+border: 1.5px solid var(--sky-border);
+border-radius: var(--radius-md);
+padding: 0.75rem 1.1rem;
+box-shadow: 0 6px 18px rgba(2, 132, 199, 0.12);
+margin-bottom: 1.2rem;
+display: flex;
+flex-direction: column;
+gap: 0.45rem;
+}
+.progress-one-line {
+display: flex;
+justify-content: space-between;
+align-items: center;
+gap: 0.6rem;
+font-size: 0.88rem;
+font-weight: 700;
+flex-wrap: wrap;
+}
+.progress-title-nowrap {
+display: inline-flex;
+align-items: center;
+gap: 0.4rem;
+color: var(--sky);
+font-weight: 800;
+}
+.progress-stat-nowrap {
+font-size: 0.84rem;
+color: var(--text-sub);
+white-space: nowrap;
+}
+.progress-stat-nowrap b {
+color: var(--sky);
+font-size: 0.96rem;
+margin-left: 0.15rem;
+}
+.progress-track {
+width: 100%;
+height: 8px;
+background: #e2e8f0;
+border-radius: 9999px;
+overflow: hidden;
+}
+.progress-fill {
+height: 100%;
+width: 0%;
+background: linear-gradient(90deg, #38bdf8, #0284c7);
+border-radius: 9999px;
+transition: width 0.35s ease;
+}
+.container {
+max-width: 840px;
+width: 100%;
+background: var(--card-bg);
+border: 1px solid var(--card-border);
+border-radius: var(--radius-lg);
+padding: 2.2rem 2rem;
+box-shadow: var(--shadow-card);
+}
+.header-box {
+border-bottom: 1.5px solid #e2e8f0;
+padding-bottom: 1.4rem;
+margin-bottom: 1.8rem;
+}
+.ver-badge {
+display: inline-flex;
+align-items: center;
+padding: 0.28rem 0.75rem;
+background: var(--sky-soft);
+border: 1px solid var(--sky-border);
+border-radius: 9999px;
+font-size: 0.75rem;
+font-weight: 800;
+color: var(--sky);
+margin-bottom: 0.65rem;
+letter-spacing: 0.02em;
+}
+h1 {
+font-size: 1.8rem;
+font-weight: 900;
+letter-spacing: -0.025em;
+color: var(--text-main);
+margin-bottom: 0.5rem;
+line-height: 1.35;
+}
+.subtitle {
+font-size: 0.94rem;
+color: var(--text-muted);
+line-height: 1.6;
+}
+.sec-row {
+display: flex;
+align-items: center;
+gap: 0.65rem;
+margin: 2.2rem 0 1.1rem 0;
+padding-bottom: 0.5rem;
+border-bottom: 1.5px solid #e2e8f0;
+}
+.sec-row:first-of-type {
+margin-top: 0.2rem;
+}
+.sec-badge {
+width: 26px;
+height: 26px;
+border-radius: 8px;
+background: var(--sky);
+color: #fff;
+font-size: 0.82rem;
+font-weight: 900;
+display: flex;
+align-items: center;
+justify-content: center;
+flex-shrink: 0;
+}
+.sec-title {
+font-size: 1.16rem;
+font-weight: 800;
+color: var(--text-main);
+letter-spacing: -0.01em;
+}
+.q-item {
+background: var(--q-bg);
+border: 1px solid var(--q-border);
+border-radius: var(--radius-md);
+padding: 1.3rem 1.4rem;
+margin-bottom: 1.25rem;
+transition: var(--transition);
+}
+.q-item:focus-within {
+border-color: var(--sky-border);
+background: #ffffff;
+box-shadow: 0 4px 16px rgba(2, 132, 199, 0.06);
+}
+.q-head {
+margin-bottom: 0.95rem;
+}
+.q-title-row {
+display: flex;
+align-items: flex-start;
+gap: 0.5rem;
+font-size: 1.04rem;
+font-weight: 800;
+color: var(--text-main);
+line-height: 1.45;
+flex-wrap: wrap;
+}
+.q-tag {
+background: var(--sky-soft);
+color: var(--sky);
+border: 1px solid var(--sky-border);
+border-radius: 6px;
+padding: 0.15rem 0.45rem;
+font-size: 0.76rem;
+font-weight: 900;
+flex-shrink: 0;
+margin-top: 0.1rem;
+}
+.q-title-row .req {
+color: var(--danger);
+margin-left: 0.15rem;
+}
+.q-sub {
+font-size: 0.84rem;
+color: var(--text-muted);
+margin-top: 0.35rem;
+line-height: 1.5;
+}
+.guide-callout {
+background: #f1f5f9;
+border-left: 4px solid var(--sky);
+border-radius: var(--radius-sm);
+padding: 0.85rem 1.05rem;
+margin-bottom: 0.95rem;
+font-size: 0.83rem;
+color: var(--text-sub);
+line-height: 1.55;
+}
+.guide-callout b {
+color: var(--sky);
+}
+.guide-list {
+margin-top: 0.4rem;
+padding-left: 1.15rem;
+display: flex;
+flex-direction: column;
+gap: 0.25rem;
+font-size: 0.81rem;
+color: var(--text-muted);
+}
+.grid-2col {
+display: grid;
+grid-template-columns: repeat(2, minmax(0, 1fr));
+gap: 1rem;
+}
+.field-box {
+display: flex;
+flex-direction: column;
+gap: 0.4rem;
+min-width: 0;
+}
+.field-box label {
+font-size: 0.85rem;
+font-weight: 700;
+color: var(--text-sub);
+}
+input[type="text"],
+input[type="tel"],
+input[type="email"],
+input[type="date"],
+textarea {
+width: 100%;
+background: #ffffff;
+border: 1.5px solid var(--dropdown-border);
+border-radius: var(--radius-sm);
+padding: 0.75rem 0.95rem;
+font-size: 16px;
+color: var(--text-main);
+outline: none;
+transition: var(--transition);
+min-height: 46px;
+}
+input:focus,
+textarea:focus {
+border-color: var(--sky);
+box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+background: #ffffff;
+}
+textarea {
+resize: vertical;
+min-height: 110px;
+line-height: 1.6;
+}
+.custom-select-wrapper {
+position: relative;
+user-select: none;
+width: 100%;
+}
+.custom-select-trigger {
+display: flex;
+justify-content: space-between;
+align-items: center;
+width: 100%;
+min-height: 46px;
+background: #ffffff;
+border: 1.5px solid var(--dropdown-border);
+border-radius: var(--radius-sm);
+padding: 0.75rem 0.95rem;
+font-size: 0.9rem;
+color: var(--text-main);
+cursor: pointer;
+transition: var(--transition);
+gap: 0.5rem;
+}
+.custom-select-trigger .selected-text {
+overflow: hidden;
+text-overflow: ellipsis;
+white-space: nowrap;
+min-width: 0;
+}
+.custom-select-trigger:hover {
+border-color: var(--sky);
+}
+.custom-select-trigger.active {
+border-color: var(--sky);
+box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+}
+.custom-select-arrow {
+width: 8px;
+height: 8px;
+border-right: 2px solid var(--sky);
+border-bottom: 2px solid var(--sky);
+transform: rotate(45deg);
+transition: transform 0.2s ease;
+flex-shrink: 0;
+}
+.custom-select-trigger.active .custom-select-arrow {
+transform: rotate(-135deg);
+}
+.custom-options-panel {
+position: absolute;
+top: calc(100% + 5px);
+left: 0;
+right: 0;
+background: #ffffff;
+border: 1px solid var(--card-border);
+border-radius: var(--radius-md);
+box-shadow: 0 12px 28px rgba(15, 23, 42, 0.15);
+z-index: 50;
+max-height: 240px;
+overflow-y: auto;
+display: none;
+}
+.custom-options-panel.open {
+display: block;
+animation: fadeIn 0.15s ease;
+}
+.custom-optgroup-label {
+padding: 0.5rem 0.95rem;
+font-size: 0.76rem;
+font-weight: 800;
+color: var(--sky);
+background: #f1f5f9;
+border-bottom: 1px solid #e2e8f0;
+}
+.custom-option {
+padding: 0.75rem 0.95rem;
+font-size: 0.86rem;
+color: var(--text-main);
+cursor: pointer;
+transition: background 0.12s ease;
+border-bottom: 1px solid #f1f5f9;
+line-height: 1.4;
+}
+.custom-option:last-child {
+border-bottom: none;
+}
+.custom-option:hover,
+.custom-option.selected {
+background: var(--sky-soft);
+color: var(--sky);
+font-weight: 700;
+}
+.mini-chips {
+display: flex;
+flex-wrap: wrap;
+gap: 0.45rem;
+}
+.mini-chip {
+display: inline-flex;
+align-items: center;
+gap: 0.4rem;
+padding: 0.45rem 0.8rem;
+background: #ffffff;
+border: 1.5px solid var(--dropdown-border);
+border-radius: 9999px;
+font-size: 0.8rem;
+font-weight: 600;
+color: var(--text-sub);
+cursor: pointer;
+user-select: none;
+transition: var(--transition);
+line-height: 1.35;
+max-width: 100%;
+min-height: 38px;
+}
+.mini-chip input {
+display: none;
+}
+.mini-chip:hover {
+background: var(--sky-soft);
+border-color: var(--sky-border);
+color: var(--text-main);
+}
+.mini-chip.active {
+background: var(--sky-soft);
+border-color: var(--sky);
+color: var(--sky);
+font-weight: 800;
+}
+.chip-bullet {
+width: 6px;
+height: 6px;
+border-radius: 50%;
+background: #94a3b8;
+flex-shrink: 0;
+transition: var(--transition);
+}
+.mini-chip.active .chip-bullet {
+background: var(--sky);
+transform: scale(1.2);
+}
+.custom-box {
+margin-top: 0.75rem;
+display: none;
+}
+.custom-box.open {
+display: block;
+animation: fadeIn 0.2s ease;
+}
+.perks-none-btn {
+display: flex;
+align-items: center;
+gap: 0.6rem;
+background: #ffffff;
+border: 1.8px dashed #cbd5e1;
+border-radius: var(--radius-sm);
+padding: 0.75rem 0.95rem;
+cursor: pointer;
+font-size: 0.83rem;
+font-weight: 700;
+color: var(--text-main);
+margin-bottom: 0.8rem;
+transition: var(--transition);
+line-height: 1.4;
+}
+.perks-none-btn:hover {
+border-color: var(--sky);
+background: var(--sky-soft);
+}
+.perks-none-btn.active {
+border: 1.8px solid var(--sky);
+background: var(--sky-soft);
+color: var(--sky);
+}
+.perks-none-btn input {
+accent-color: var(--sky);
+cursor: pointer;
+width: 16px;
+height: 16px;
+flex-shrink: 0;
+}
+.perks-expander-btn {
+width: 100%;
+background: #ffffff;
+border: 1.5px solid var(--q-border);
+border-radius: var(--radius-sm);
+padding: 0.65rem;
+font-size: 0.81rem;
+font-weight: 700;
+color: var(--sky);
+cursor: pointer;
+margin-top: 0.75rem;
+transition: var(--transition);
+}
+.perks-expander-btn:hover {
+background: var(--sky-soft);
+border-color: var(--sky-border);
+}
+.perks-hidden-tray {
+display: none;
+margin-top: 0.75rem;
+padding-top: 0.75rem;
+border-top: 1.5px dashed var(--q-border);
+}
+.perks-hidden-tray.open {
+display: block;
+animation: fadeIn 0.2s ease;
+}
+.file-upload-box {
+border: 2px dashed var(--sky-border);
+background: #f0f9ff;
+border-radius: var(--radius-md);
+padding: 1.4rem 1.1rem;
+text-align: center;
+cursor: pointer;
+transition: var(--transition);
+position: relative;
+}
+.file-upload-box:hover {
+background: #e0f2fe;
+border-color: var(--sky);
+}
+.file-upload-box input[type="file"] {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+opacity: 0;
+cursor: pointer;
+}
+.file-label-main {
+font-size: 0.92rem;
+font-weight: 800;
+color: var(--sky);
+margin-bottom: 0.35rem;
+line-height: 1.4;
+}
+.file-label-sub {
+font-size: 0.78rem;
+color: var(--text-muted);
+line-height: 1.4;
+}
+.file-chosen-indicator {
+margin-top: 0.7rem;
+font-size: 0.84rem;
+font-weight: 800;
+color: #065f46;
+display: none;
+word-break: break-all;
+background: #d1fae5;
+padding: 0.4rem 0.8rem;
+border-radius: var(--radius-sm);
+}
+.submit-area {
+margin-top: 2.2rem;
+padding-top: 1.6rem;
+border-top: 1.5px solid #e2e8f0;
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 0.85rem;
+width: 100%;
+}
+.btn-submit {
+width: 100%;
+max-width: 520px;
+padding: 1.05rem 1.4rem;
+background: linear-gradient(135deg, #0284c7, #0369a1);
+border: none;
+border-radius: var(--radius-md);
+color: #ffffff;
+font-size: 1rem;
+font-weight: 800;
+letter-spacing: -0.01em;
+cursor: pointer;
+box-shadow: 0 6px 18px rgba(2, 132, 199, 0.28);
+transition: var(--transition);
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 0.55rem;
+text-align: center;
+line-height: 1.45;
+white-space: normal;
+word-break: keep-all;
+min-height: 52px;
+}
+.btn-submit:hover:not(:disabled) {
+transform: translateY(-2px);
+box-shadow: 0 8px 24px rgba(2, 132, 199, 0.38);
+background: linear-gradient(135deg, #0369a1, #075985);
+}
+.btn-submit:disabled {
+opacity: 0.85;
+cursor: not-allowed;
+transform: none;
+}
+.spinner {
+width: 20px;
+height: 20px;
+border: 2.5px solid rgba(255, 255, 255, 0.35);
+border-top-color: #ffffff;
+border-radius: 50%;
+animation: spin 0.7s linear infinite;
+display: none;
+flex-shrink: 0;
+}
+.status-msg {
+font-size: 0.88rem;
+font-weight: 600;
+display: none;
+padding: 0.95rem 1.25rem;
+border-radius: var(--radius-md);
+text-align: center;
+max-width: 520px;
+width: 100%;
+line-height: 1.6;
+animation: fadeIn 0.25s ease;
+}
+.status-msg.loading {
+display: block;
+background: #f1f5f9;
+border: 1px solid #cbd5e1;
+color: #334155;
+}
+.status-msg.success {
+display: block;
+background: var(--success-bg);
+border: 1.5px solid var(--success-border);
+color: var(--success-text);
+font-weight: 800;
+box-shadow: 0 4px 14px rgba(5, 150, 105, 0.12);
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+@media (max-width: 640px) {
+body { padding: 0.6rem 0.5rem 3.5rem 0.5rem; }
+.sticky-progress-wrap { top: 0.4rem; padding: 0.6rem 0.85rem; margin-bottom: 0.85rem; }
+.container { padding: 1.4rem 0.95rem; }
+h1 { font-size: 1.42rem; }
+}
+</style>
 </head>
 <body>
-
-  <div class="sticky-progress-wrap">
-    <div class="progress-one-line">
-      <div class="progress-title-nowrap">
-        <span>⚡ 실시간 기술자산 진단 작성률</span>
-      </div>
-      <div class="progress-stat-nowrap">
-        <span id="answeredCount">0</span>/10 문항 (<b id="progressPercent">0%</b>)
-      </div>
-    </div>
-    <div class="progress-track">
-      <div id="progressFill" class="progress-fill"></div>
-    </div>
-  </div>
-
-  <div class="container">
-    <div class="header-box">
-      <div class="ver-badge">REAL-TIME TECH ASSET AUDIT v2.3.0</div>
-      <h1>AI 국가 공공 R&D 기술진단 및 핀포인트 과제 매칭</h1>
-      <p class="subtitle">신청 기업의 무형 노하우를 공학적 R&D 과제로 치환하고, 2026년 정부 R&D 최적 지원사업 3선을 핀포인트로 매칭 판정합니다.</p>
-    </div>
-
-    <form id="techAuditForm">
-      <div class="sec-row">
-        <div class="sec-badge">1</div>
-        <div class="sec-title">기업 및 담당자 기본 제원</div>
-      </div>
-
-      <div class="q-item" data-q="1">
-        <div class="q-head">
-          <div class="q-title-row">
-            <span class="q-tag">Q1</span>
-            <span>진단 대상 기업의 기본 정보를 입력해 주세요.</span>
-            <span class="req"></span>
-          </div>
-          <div class="q-sub">설립일자를 기준으로 초기창업(3년), 창업도약(7년), 중소기업 일반 R&D 적격 트랙이 자동 분류됩니다.</div>
-        </div>
-        <div class="grid-2col">
-          <div class="field-box">
-            <label>기업명 <span class="req"></span></label>
-            <input type="text" name="companyName" required placeholder="기업명을 입력해 주세요" class="track-input">
-          </div>
-          <div class="field-box">
-            <label>사업자등록번호 <span class="req"></span></label>
-            <input type="text" name="bizNo" required placeholder="000-00-00000" class="track-input">
-          </div>
-          <div class="field-box">
-            <label>설립일자 <span class="req"></span></label>
-            <input type="date" name="estDate" required class="track-input">
-          </div>
-          <div class="field-box">
-            <label>최근 연간 매출액 규모 <span class="req">*</span></label>
-            <div class="custom-select-wrapper" data-name="revenueScale">
-              <input type="hidden" name="revenueScale" class="track-input" required>
-              <div class="custom-select-trigger">
-                <span class="selected-text">눌러서 매출 구간 선택</span>
-                <span class="custom-select-arrow"></span>
-              </div>
-              <div class="custom-options-panel">
-                <div class="custom-option" data-value="매출 없음 (Pre-Revenue / 창업 초기)">매출 없음 (Pre-Revenue / 창업 초기)</div>
-                <div class="custom-option" data-value="1억 원 미만">1억 원 미만</div>
-                <div class="custom-option" data-value="1억 원 이상 ~ 5억 원 미만">1억 원 이상 ~ 5억 원 미만</div>
-                <div class="custom-option" data-value="5억 원 이상 ~ 20억 원 미만">5억 원 이상 ~ 20억 원 미만</div>
-                <div class="custom-option" data-value="20억 원 이상 ~ 50억 원 미만">20억 원 이상 ~ 50억 원 미만</div>
-                <div class="custom-option" data-value="50억 원 이상 (중기업·중견 도약)">50억 원 이상 (중기업·중견 도약)</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="q-item" data-q="2">
-        <div class="q-head">
-          <div class="q-title-row">
-            <span class="q-tag">Q2</span>
-            <span>신청 담당자 연락처 및 결과 수신 메일을 입력해 주세요.</span>
-            <span class="req"></span>
-          </div>
-          <div class="q-sub">수석 심사위원 평가 리포트 및 기술자산화 핀포인트 과제 매칭 결과가 전달됩니다.</div>
-        </div>
-        <div class="grid-2col">
-          <div class="field-box">
-            <label>담당자 성함 / 직함 <span class="req"></span></label>
-            <input type="text" name="contactName" required placeholder="홍길동 수석연구원" class="track-input">
-          </div>
-          <div class="field-box">
-            <label>연락처 <span class="req"></span></label>
-            <input type="tel" name="contactPhone" required placeholder="010-0000-0000" class="track-input">
-          </div>
-          <div class="field-box" style="grid-column: 1 / -1;">
-            <label>수신 이메일 주소 <span class="req"></span></label>
-            <input type="email" name="contactEmail" required placeholder="hacapko@gmail.com" value="hacapko@gmail.com" class="track-input">
-          </div>
-        </div>
-      </div>
-
-      <div class="sec-row">
-        <div class="sec-badge">2</div>
-        <div class="sec-title">기술성숙도(TRL) 및 개발 목표 형태</div>
-      </div>
-
-      <div class="q-item" data-q="3">
-        <div class="q-head">
-          <div class="q-title-row">
-            <span class="q-tag">Q3</span>
-            <span>현재 연구개발 성숙도(TRL) 단계는 어디인가요?</span>
-            <span class="req">*</span>
-          </div>
-          <div class="q-sub">아이디어 수준부터 양산 실증 단계까지 최적 정부지원금 매칭 트랙을 결정합니다 (1개 선택).</div>
-        </div>
-        <div class="mini-chips">
-          <label class="mini-chip active">
-            <input type="radio" name="trl" value="TRL 1~2단계 (기초연구/아이디어)" checked required>
-            <span class="chip-bullet"></span>
-            <span>TRL 1~2단계 (기초연구)</span>
-          </label>
-          <label class="mini-chip">
-            <input type="radio" name="trl" value="TRL 3~4단계 (실험실 PoC/알고리즘 검증)">
-            <span class="chip-bullet"></span>
-            <span>TRL 3~4단계 (실험실 PoC)</span>
-          </label>
-          <label class="mini-chip">
-            <input type="radio" name="trl" value="TRL 5~6단계 (시제품 제작/테스트베드 검증)">
-            <span class="chip-bullet"></span>
-            <span>TRL 5~6단계 (시제품 검증)</span>
-          </label>
-          <label class="mini-chip">
-            <input type="radio" name="trl" value="TRL 7~8단계 (신뢰성 인증/양산화 준비)">
-            <span class="chip-bullet"></span>
-            <span>TRL 7~8단계 (신뢰성·양산화)</span>
-          </label>
-        </div>
-      </div>
-
-      <div class="q-item" data-q="4">
-        <div class="q-head">
-          <div class="q-title-row">
-            <span class="q-tag">Q4</span>
-            <span>최종 개발 목표 형태가 무엇인가요?</span>
-            <span class="req">*</span>
-          </div>
-          <div class="q-sub">소프트웨어/플랫폼 vs 하드웨어 회로/기구설계 본문 분기를 결정합니다.</div>
-        </div>
-        <div class="mini-chips" id="targetTypeChips">
-          <label class="mini-chip active">
-            <input type="radio" name="targetType" value="순수 S/W · 플랫폼 · 웹/앱 · SaaS" checked required>
-            <span class="chip-bullet"></span>
-            <span>순수 S/W·SaaS</span>
-          </label>
-          <label class="mini-chip">
-            <input type="radio" name="targetType" value="인공지능(AI) 알고리즘 · 초거대모델(LLM)">
-            <span class="chip-bullet"></span>
-            <span>AI·LLM 솔루션</span>
-          </label>
-          <label class="mini-chip">
-            <input type="radio" name="targetType" value="임베디드 S/W · 엣지 컴퓨팅 · 펌웨어">
-            <span class="chip-bullet"></span>
-            <span>임베디드·엣지</span>
-          </label>
-          <label class="mini-chip">
-            <input type="radio" name="targetType" value="H/W 단품 · 기구물 · IoT 전자모듈">
-            <span class="chip-bullet"></span>
-            <span>H/W 단품·IoT</span>
-          </label>
-          <label class="mini-chip">
-            <input type="radio" name="targetType" value="H/W + S/W 융합 시스템 · 로봇 · 모빌리티">
-            <span class="chip-bullet"></span>
-            <span>H/W+S/W 융합 시스템</span>
-          </label>
-          <label class="mini-chip">
-            <input type="radio" name="targetType" value="화학 · 소재 · 배터리 · 신소재 부품">
-            <span class="chip-bullet"></span>
-            <span>소재·배터리·부품</span>
-          </label>
-          <label class="mini-chip">
-            <input type="radio" name="targetType" value="바이오 · 신약 · 의료기기 · 헬스케어">
-            <span class="chip-bullet"></span>
-            <span>바이오·의료기기</span>
-          </label>
-          <label class="mini-chip">
-            <input type="radio" name="targetType" value="친환경 · 신재생에너지 · 탄소중립 장비">
-            <span class="chip-bullet"></span>
-            <span>친환경·에너지 장비</span>
-          </label>
-          <label class="mini-chip" id="targetCustomBtn">
-            <input type="radio" name="targetType" value="기타 직접입력">
-            <span class="chip-bullet"></span>
-            <span>+ 기타 직접입력</span>
-          </label>
-        </div>
-        <div id="targetCustomBox" class="custom-box">
-          <input type="text" name="targetTypeCustom" placeholder="개발 목표 형태를 직접 입력해 주세요">
-        </div>
-      </div>
-
-      <!-- Q5: 핵심 기술 개요 및 3대 작성 가이드 복원 -->
-      <div class="q-item" data-q="5">
-        <div class="q-head">
-          <div class="q-title-row">
-            <span class="q-tag">Q5</span>
-            <span>핵심 기술/서비스 개요 및 주요 기능을 요약해 주세요.</span>
-            <span class="req">*</span>
-          </div>
-          <div class="q-sub">구체적인 메커니즘을 적어주실수록 AI가 정확한 기술자산화 R&D 과제명을 도출합니다.</div>
-        </div>
-
-        <div class="guide-callout">
-          <b>💡 정밀 분석을 위한 3대 핵심 작성 기준</b> (비기술/컨설팅 기업은 현재 업무 노하우를 적어주셔도 됩니다):
-          <ul class="guide-list">
-            <li><b>1. 해결 과제:</b> 기존 시장/고객이 겪는 한계점 및 수작업의 불편함</li>
-            <li><b>2. 기술 메커니즘:</b> 귀사가 개발 또는 자동화할 핵심 알고리즘/프로세스/기능</li>
-            <li><b>3. 목표 성능치:</b> 개발 완료 시 기대되는 정량적 성능치(정확도 %, 처리속도 단축 등)</li>
-          </ul>
-        </div>
-
-        <textarea name="techSummary" required placeholder="[작성 예시]
-1. 기존 한계: 산업 현장의 위험 요소 점검이 안전 관리자의 육안에 의존하여 오탐률이 높음.
-2. 개발 내용: 영상 인식 AI 모델과 온디바이스 엣지 게이트웨이를 결합하여 위험 구역 침범을 실시간 탐지하는 자동화 엔진 개발.
+<div class="sticky-progress-wrap">
+<div class="progress-one-line">
+<div class="progress-title-nowrap">
+<span>⚡ 실시간 기술자산 진단 작성률</span>
+</div>
+<div class="progress-stat-nowrap">
+<span id="answeredCount">0</span>/10 문항 (<b id="progressPercent">0%</b>)
+</div>
+</div>
+<div class="progress-track">
+<div id="progressFill" class="progress-fill"></div>
+</div>
+</div>
+<div class="container">
+<div class="header-box">
+<div class="ver-badge">REAL-TIME TECH ASSET AUDIT</div>
+<h1>AI 국가 공공 R&D 기술진단 및 핀포인트 과제 매칭</h1>
+<p class="subtitle">신청 기업의 무형 노하우를 공학적 R&D 과제로 치환하고, 2026년 정부 R&D 최적 지원사업 3선을 핀포인트로 매칭 판정합니다.</p>
+</div>
+<form id="techAuditForm">
+<div class="sec-row">
+<div class="sec-badge">1</div>
+<div class="sec-title">기업 및 담당자 기본 제원</div>
+</div>
+<div class="q-item" data-q="1">
+<div class="q-head">
+<div class="q-title-row">
+<span class="q-tag">Q1</span>
+<span>진단 대상 기업의 기본 정보를 입력해 주세요.</span>
+<span class="req"></span>
+</div>
+<div class="q-sub">설립일자를 기준으로 초기창업(3년), 창업도약(7년), 중소기업 일반 R&D 적격 트랙이 자동 분류됩니다.</div>
+</div>
+<div class="grid-2col">
+<div class="field-box">
+<label>기업명 <span class="req"></span></label>
+<input type="text" name="companyName" required placeholder="기업명을 입력해 주세요" class="track-input">
+</div>
+<div class="field-box">
+<label>사업자등록번호 <span class="req"></span></label>
+<input type="text" name="bizNo" required placeholder="000-00-00000" class="track-input">
+</div>
+<div class="field-box">
+<label>설립일자 <span class="req"></span></label>
+<input type="date" name="estDate" required class="track-input">
+</div>
+<div class="field-box">
+<label>최근 연간 매출액 규모 <span class="req"></span></label>
+<div class="custom-select-wrapper" data-name="revenueScale">
+<input type="hidden" name="revenueScale" class="track-input" required>
+<div class="custom-select-trigger">
+<span class="selected-text">눌러서 매출 구간 선택</span>
+<span class="custom-select-arrow"></span>
+</div>
+<div class="custom-options-panel">
+<div class="custom-option" data-value="매출 없음 (Pre-Revenue / 창업 초기)">매출 없음 (Pre-Revenue / 창업 초기)</div>
+<div class="custom-option" data-value="1억 원 미만">1억 원 미만</div>
+<div class="custom-option" data-value="1억 원 이상 ~ 5억 원 미만">1억 원 이상 ~ 5억 원 미만</div>
+<div class="custom-option" data-value="5억 원 이상 ~ 20억 원 미만">5억 원 이상 ~ 20억 원 미만</div>
+<div class="custom-option" data-value="20억 원 이상 ~ 50억 원 미만">20억 원 이상 ~ 50억 원 미만</div>
+<div class="custom-option" data-value="50억 원 이상 (중기업·중견 도약)">50억 원 이상 (중기업·중견 도약)</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="q-item" data-q="2">
+<div class="q-head">
+<div class="q-title-row">
+<span class="q-tag">Q2</span>
+<span>신청 담당자 연락처 및 결과 수신 메일을 입력해 주세요.</span>
+<span class="req"></span>
+</div>
+<div class="q-sub">수석 심사위원 평가 리포트 및 기술자산화 핀포인트 과제 매칭 결과가 전달됩니다.</div>
+</div>
+<div class="grid-2col">
+<div class="field-box">
+<label>담당자 성함 / 직함 <span class="req"></span></label>
+<input type="text" name="contactName" required placeholder="홍길동 수석연구원" class="track-input">
+</div>
+<div class="field-box">
+<label>연락처 <span class="req"></span></label>
+<input type="tel" name="contactPhone" required placeholder="010-0000-0000" class="track-input">
+</div>
+<div class="field-box" style="grid-column: 1 / -1;">
+<label>수신 이메일 주소 <span class="req"></span></label>
+<input type="email" name="contactEmail" required placeholder="example@company.com" class="track-input">
+</div>
+</div>
+</div>
+<div class="sec-row">
+<div class="sec-badge">2</div>
+<div class="sec-title">기술성숙도(TRL) 및 개발 목표 형태</div>
+</div>
+<div class="q-item" data-q="3">
+<div class="q-head">
+<div class="q-title-row">
+<span class="q-tag">Q3</span>
+<span>현재 연구개발 성숙도(TRL) 단계는 어디인가요?</span>
+<span class="req"></span>
+</div>
+<div class="q-sub">아이디어 수준부터 양산 실증 단계까지 최적 정부지원금 매칭 트랙을 결정합니다 (1개 선택).</div>
+</div>
+<div class="mini-chips">
+<label class="mini-chip active">
+<input type="radio" name="trl" value="TRL 1~2단계 (기초연구/아이디어)" checked required>
+<span class="chip-bullet"></span>
+<span>TRL 1~2단계 (기초연구)</span>
+</label>
+<label class="mini-chip">
+<input type="radio" name="trl" value="TRL 3~4단계 (실험실 PoC/알고리즘 검증)">
+<span class="chip-bullet"></span>
+<span>TRL 3~4단계 (실험실 PoC)</span>
+</label>
+<label class="mini-chip">
+<input type="radio" name="trl" value="TRL 5~6단계 (시제품 제작/테스트베드 검증)">
+<span class="chip-bullet"></span>
+<span>TRL 5~6단계 (시제품 검증)</span>
+</label>
+<label class="mini-chip">
+<input type="radio" name="trl" value="TRL 7~8단계 (신뢰성 인증/양산화 준비)">
+<span class="chip-bullet"></span>
+<span>TRL 7~8단계 (신뢰성·양산화)</span>
+</label>
+</div>
+</div>
+<div class="q-item" data-q="4">
+<div class="q-head">
+<div class="q-title-row">
+<span class="q-tag">Q4</span>
+<span>최종 개발 목표 형태가 무엇인가요?</span>
+<span class="req"></span>
+</div>
+<div class="q-sub">소프트웨어/플랫폼 vs 하드웨어 회로/기구설계 본문 분기를 결정합니다.</div>
+</div>
+<div class="mini-chips" id="targetTypeChips">
+<label class="mini-chip active">
+<input type="radio" name="targetType" value="순수 S/W · 플랫폼 · 웹/앱 · SaaS" checked required>
+<span class="chip-bullet"></span>
+<span>순수 S/W·SaaS</span>
+</label>
+<label class="mini-chip">
+<input type="radio" name="targetType" value="인공지능(AI) 알고리즘 · 초거대모델(LLM)">
+<span class="chip-bullet"></span>
+<span>AI·LLM 솔루션</span>
+</label>
+<label class="mini-chip">
+<input type="radio" name="targetType" value="임베디드 S/W · 엣지 컴퓨팅 · 펌웨어">
+<span class="chip-bullet"></span>
+<span>임베디드·엣지</span>
+</label>
+<label class="mini-chip">
+<input type="radio" name="targetType" value="H/W 단품 · 기구물 · IoT 전자모듈">
+<span class="chip-bullet"></span>
+<span>H/W 단품·IoT</span>
+</label>
+<label class="mini-chip">
+<input type="radio" name="targetType" value="H/W + S/W 융합 시스템 · 로봇 · 모빌리티">
+<span class="chip-bullet"></span>
+<span>H/W+S/W 융합 시스템</span>
+</label>
+<label class="mini-chip">
+<input type="radio" name="targetType" value="화학 · 소재 · 배터리 · 신소재 부품">
+<span class="chip-bullet"></span>
+<span>소재·배터리·부품</span>
+</label>
+<label class="mini-chip">
+<input type="radio" name="targetType" value="바이오 · 신약 · 의료기기 · 헬스케어">
+<span class="chip-bullet"></span>
+<span>바이오·의료기기</span>
+</label>
+<label class="mini-chip">
+<input type="radio" name="targetType" value="친환경 · 신재생에너지 · 탄소중립 장비">
+<span class="chip-bullet"></span>
+<span>친환경·에너지 장비</span>
+</label>
+<label class="mini-chip" id="targetCustomBtn">
+<input type="radio" name="targetType" value="기타 직접입력">
+<span class="chip-bullet"></span>
+<span>+ 기타 직접입력</span>
+</label>
+</div>
+<div id="targetCustomBox" class="custom-box">
+<input type="text" name="targetTypeCustom" placeholder="개발 목표 형태를 직접 입력해 주세요 (예: 항공우주 초소형 위성 추진체 모듈)">
+</div>
+</div>
+<div class="q-item" data-q="5">
+<div class="q-head">
+<div class="q-title-row">
+<span class="q-tag">Q5</span>
+<span>핵심 기술/서비스 개요 및 주요 기능을 요약해 주세요.</span>
+<span class="req"></span>
+</div>
+<div class="q-sub">구체적인 메커니즘을 적어주실수록 AI가 정확한 기술자산화 R&D 과제명을 도출합니다.</div>
+</div>
+<div class="guide-callout">
+<b>💡 정밀 분석을 위한 3대 핵심 작성 기준</b> (비기술/컨설팅 기업은 현재 업무 노하우를 적어주셔도 됩니다):
+<ul class="guide-list">
+<li><b>1. 해결 과제:</b> 기존 시장/고객이 겪는 한계점 및 수작업의 불편함</li>
+<li><b>2. 기술 메커니즘:</b> 귀사가 개발 또는 자동화할 핵심 알고리즘/프로세스/기능</li>
+<li><b>3. 목표 성능치:</b> 개발 완료 시 기대되는 정량적 성능치(정확도 %, 처리속도 단축 등)</li>
+</ul>
+</div>
+<textarea name="techSummary" required placeholder="[작성 예시]
+1. 기존 한계: 산업 현장의 위험 요소 점검이 안전 관리자의 육안에 의존하여 오탐률이 높고 이력 관리가 부재함.
+2. 개발 내용: 영상 인식 AI 모델과 온디바이스 엣지 게이트웨이를 결합하여 작업자 안전모 미착용 및 위험 구역 침범을 실시간 탐지하는 자동화 엔진 개발.
 3. 혁신 성능: 실시간 위험 탐지 정확도 98% 이상 달성 및 사고 대응 지연시간 50% 단축." class="track-input"></textarea>
-      </div>
-
-      <div class="sec-row">
-        <div class="sec-badge">3</div>
-        <div class="sec-title">개발 동기, 타깃 수요처 및 실증·공인인증</div>
-      </div>
-
-      <div class="q-item" data-q="6">
-        <div class="q-head">
-          <div class="q-title-row">
-            <span class="q-tag">Q6</span>
-            <span>기존 시장 기술 대비 핵심 차별점/동기는 무엇인가요?</span>
-            <span class="req">*</span>
-          </div>
-          <div class="q-sub">국내외 기술 개발 현황 대비 귀사만의 독창성 근거가 됩니다.</div>
-        </div>
-        <div class="custom-select-wrapper" data-name="diffFactor">
-          <input type="hidden" name="diffFactor" class="track-input" required>
-          <div class="custom-select-trigger">
-            <span class="selected-text">눌러서 핵심 개발 동기 선택</span>
-            <span class="custom-select-arrow"></span>
-          </div>
-          <div class="custom-options-panel">
-            <div class="custom-option" data-value="기존 솔루션 대비 처리 속도·정확도·성능 획기적 개선">기존 솔루션 대비 처리 속도·정확도·성능 획기적 개선</div>
-            <div class="custom-option" data-value="외산 고가 원천장비/소프트웨어의 국산화 및 50% 이상 원가 절감">외산 고가 장비/소프트웨어 국산화 및 비용 대폭 절감</div>
-            <div class="custom-option" data-value="기존 아날로그·수작업 공정의 AI/디지털 자동화(AX 전환)">기존 수작업 공정의 AI/디지털 완전 자동화(AX 전환)</div>
-            <div class="custom-option" data-value="강화된 글로벌 규제(ESG, 탄소배출, 안전기준) 선제적 대응">글로벌 규제 선제 대응</div>
-            <div class="custom-option" data-value="기타 독자적 성능 혁신">기타 독자적 성능 혁신</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="q-item" data-q="7">
-        <div class="q-head">
-          <div class="q-title-row">
-            <span class="q-tag">Q7</span>
-            <span>주요 타깃 수요처 및 실증(PoC) 검증 현황은 어떠한가요?</span>
-            <span class="req"></span>
-          </div>
-          <div class="q-sub">평가위원들이 가장 중요하게 보는 사업화 실현 가능성을 증명합니다.</div>
-        </div>
-        <div class="grid-2col">
-          <div class="field-box">
-            <label>주요 타깃 수요처 <span class="req"></span></label>
-            <div class="custom-select-wrapper" data-name="targetMarket">
-              <input type="hidden" name="targetMarket" class="track-input" required>
-              <div class="custom-select-trigger">
-                <span class="selected-text">눌러서 진입 시장 선택</span>
-                <span class="custom-select-arrow"></span>
-              </div>
-              <div class="custom-options-panel">
-                <div class="custom-option" data-value="B2B 대기업·중견 제조공장 및 엔터프라이즈 산업 현장">B2B 대기업·중견 제조공장 및 산업 현장</div>
-                <div class="custom-option" data-value="중소기업 및 스타트업·소상공인 (SME 생태계)">중소기업 및 소상공인 (SME)</div>
-                <div class="custom-option" data-value="공공기관, 지자체, 공기업 및 국방 조달 시장 (B2G)">공공기관 및 국방 조달 (B2G)</div>
-                <div class="custom-option" data-value="병원, 의료기관, 제약사 및 헬스케어 클러스터">병원, 의료기관 및 헬스케어</div>
-                <div class="custom-option" data-value="일반 대중 소비자 (B2C) 및 글로벌 직접 진출">일반 소비자 (B2C) 및 글로벌</div>
-              </div>
-            </div>
-          </div>
-          <div class="field-box">
-            <label>수요처 연계 및 실증(PoC) 현황 <span class="req">*</span></label>
-            <div class="custom-select-wrapper" data-name="pocStatus">
-              <input type="hidden" name="pocStatus" class="track-input" required>
-              <div class="custom-select-trigger">
-                <span class="selected-text">눌러서 실증 현황 선택</span>
-                <span class="custom-select-arrow"></span>
-              </div>
-              <div class="custom-options-panel">
-                <div class="custom-option" data-value="구매의향서(LOI) / 구매확약서(LOC) 확보 완료">구매의향서(LOI) / 확약서(LOC) 확보 완료</div>
-                <div class="custom-option" data-value="수요기업과 공동 연구개발 또는 실증(PoC) 협의 중">수요처와 공동 R&D / PoC 협의 중</div>
-                <div class="custom-option" data-value="기존 납품·거래선 보유 (제품 개발 시 즉시 채택 예정)">기존 고정 납품선 보유</div>
-                <div class="custom-option" data-value="과제 선정 후 1차년도 내 타깃 수요처 발굴 추진 예정">선정 후 수요처 발굴 추진 예정</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="q-item" data-q="8">
-        <div class="q-head">
-          <div class="q-title-row">
-            <span class="q-tag">Q8</span>
-            <span>정량적 성능지표(KPI) 및 공인시험인증 계획은 어떠한가요?</span>
-            <span class="req"></span>
-          </div>
-          <div class="q-sub">공인 시험기관 검증 계획을 통해 기술 신뢰성을 증명합니다.</div>
-        </div>
-        <div class="grid-2col">
-          <div class="field-box">
-            <label>핵심 정량 성능목표치 (KPI)</label>
-            <input type="text" name="kpiTarget" placeholder="예: 인식 정확도 98.5%" class="track-input">
-          </div>
-          <div class="field-box">
-            <label>보유 특허 및 지식재산권 현황</label>
-            <input type="text" name="patentInfo" placeholder="예: 등록특허 1건" class="track-input">
-          </div>
-        </div>
-        <div class="field-box" style="margin-top:0.85rem;">
-          <label>공인시험평가 검증 기관 및 규격 <span class="req"></span></label>
-          <div class="custom-select-wrapper" data-name="kolasPlan" id="kolasCustomWrap">
-            <input type="hidden" name="kolasPlan" class="track-input" required id="kolasHiddenInput">
-            <div class="custom-select-trigger">
-              <span class="selected-text">눌러서 검증 규격/기관 선택</span>
-              <span class="custom-select-arrow"></span>
-            </div>
-            <div class="custom-options-panel">
-              <div class="custom-option" data-value="TTA(한국정보통신기술협회) V&V 정량시험성적서 발급">TTA 정량시험성적서 발급</div>
-              <div class="custom-option" data-value="GS(Good Software) 인증 1등급 또는 2등급 취득">GS 인증 취득</div>
-              <div class="custom-option" data-value="KOLAS 공인시험기관(KTL/KTC/KCL/KTR 등) 성적서 발급">KOLAS 공인시험성적서 발급</div>
-              <div class="custom-option" data-value="기타 시험인증 직접입력">+ 기타 시험인증 (직접 입력)</div>
-            </div>
-          </div>
-        </div>
-        <div id="kolasCustomBox" class="custom-box">
-          <input type="text" name="kolasCustom" placeholder="희망하는 공인인증 규격을 입력하세요">
-        </div>
-      </div>
-
-      <div class="sec-row">
-        <div class="sec-badge">4</div>
-        <div class="sec-title">희망 정부지원금 규모 및 보유 가점</div>
-      </div>
-
-      <div class="q-item" data-q="9">
-        <div class="q-head">
-          <div class="q-title-row">
-            <span class="q-tag">Q9</span>
-            <span>희망 정부지원금(출연금) 규모와 전담 연구인력은 어느 정도인가요?</span>
-            <span class="req"></span>
-          </div>
-          <div class="q-sub">기업 규모에 적합한 최적 트랙을 선별합니다.</div>
-        </div>
-        <div class="grid-2col">
-          <div class="field-box">
-            <label>희망 정부지원금 규모 <span class="req"></span></label>
-            <div class="custom-select-wrapper" data-name="fundingScale">
-              <input type="hidden" name="fundingScale" class="track-input" required>
-              <div class="custom-select-trigger">
-                <span class="selected-text">눌러서 희망 금액대 선택</span>
-                <span class="custom-select-arrow"></span>
-              </div>
-              <div class="custom-options-panel">
-                <div class="custom-option" data-value="1억 원 이하">1억 원 이하</div>
-                <div class="custom-option" data-value="1억 원 초과 ~ 3억 원">1억 원 초과 ~ 3억 원</div>
-                <div class="custom-option" data-value="3억 원 초과 ~ 5억 원">3억 원 초과 ~ 5억 원</div>
-                <div class="custom-option" data-value="5억 원 초과 ~ 10억 원">5억 원 초과 ~ 10억 원</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="field-box">
-            <label>사내 자체 연구개발 인력 현황 <span class="req">*</span></label>
-            <div class="custom-select-wrapper" data-name="researchCrew">
-              <input type="hidden" name="researchCrew" class="track-input" required>
-              <div class="custom-select-trigger">
-                <span class="selected-text">눌러서 연구인력 규모 선택</span>
-                <span class="custom-select-arrow"></span>
-              </div>
-              <div class="custom-options-panel">
-                <div class="custom-option" data-value="전담 연구원 0명 (대표자 직접 개발 또는 외주 용역 중심)">전담 연구원 0명</div>
-                <div class="custom-option" data-value="전담 연구원 1~2명 (초기 연구개발전담부서 요건)">전담 연구원 1~2명</div>
-                <div class="custom-option" data-value="전담 연구원 3~5명 (기업부설연구소 정식 운영)">전담 연구원 3~5명</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="q-item" data-q="10">
-        <div class="q-head">
-          <div class="q-title-row">
-            <span class="q-tag">Q10</span>
-            <span>보유 가점 및 우대사항 (공통 R&D 가점)</span>
-          </div>
-          <div class="q-sub">가점이 없어도 지원 가능하므로 해당사항이 없으면 바로 선택하실 수 있습니다.</div>
-        </div>
-        <label class="perks-none-btn" id="perksNoneBtn">
-          <input type="checkbox" id="perksNoneInput" value="보유 가점 없음 (기본 자격으로 진행)">
-          <span>🔘 현재 보유 가점 없음 (초기 창업기업 원클릭 패스)</span>
-        </label>
-        <div class="mini-chips" id="perksCoreChips">
-          <label class="mini-chip">
-            <input type="checkbox" name="perks" value="벤처기업 인증 (유효기간 내)">
-            <span>벤처기업 인증</span>
-          </label>
-          <label class="mini-chip">
-            <input type="checkbox" name="perks" value="기업부설연구소 또는 연구전담부서 보유">
-            <span>연구소/전담부서</span>
-          </label>
-        </div>
-      </div>
-
-      <div class="sec-row">
-        <div class="sec-badge">5</div>
-        <div class="sec-title">기업 소개자료 / IR 덱 첨부 (선택)</div>
-      </div>
-
-      <div class="q-item">
-        <div class="q-head">
-          <div class="q-title-row">
-            <span class="q-tag">FILE</span>
-            <span>회사소개서, IR 자료, 사업자등록증 첨부</span>
-          </div>
-          <div class="q-sub">보유하신 PDF, 이미지 파일을 첨부해 주시면 AI가 직접 분석합니다.</div>
-        </div>
-        <div class="file-upload-box" id="fileDropBox">
-          <input type="file" id="companyFile" accept=".pdf,.png,.jpg,.jpeg,.txt,.doc,.docx,.ppt,.pptx">
-          <div class="file-label-main">📁 클릭하여 회사소개서 또는 IR 자료 첨부하기</div>
-          <div class="file-label-sub">PDF, PNG, JPG, DOCX, PPTX 지원 (최대 15MB, 선택 사항)</div>
-          <div class="file-chosen-indicator" id="fileChosenIndicator"></div>
-        </div>
-      </div>
-
-      <div class="submit-area">
-        <button type="submit" class="btn-submit" id="submitBtn">
-          <span id="btnText">AI 종합 기술진단 및 핀포인트 과제 매칭 요청</span>
-          <div class="spinner" id="spinner"></div>
-        </button>
-        <div class="status-msg" id="statusMsg"></div>
-      </div>
-    </form>
-  </div>
-
-  <script>
-    document.querySelectorAll('.custom-select-wrapper').forEach(wrapper => {
-      const trigger = wrapper.querySelector('.custom-select-trigger');
-      const panel = wrapper.querySelector('.custom-options-panel');
-      const hiddenInput = wrapper.querySelector('input[type="hidden"]');
-      const selectedText = trigger.querySelector('.selected-text');
-      const options = wrapper.querySelectorAll('.custom-option');
-
-      trigger.addEventListener('click', (e) => {
-        e.stopPropagation();
-        document.querySelectorAll('.custom-options-panel').forEach(p => {
-          if (p !== panel) p.classList.remove('open');
-        });
-        document.querySelectorAll('.custom-select-trigger').forEach(t => {
-          if (t !== trigger) t.classList.remove('active');
-        });
-        panel.classList.toggle('open');
-        trigger.classList.toggle('active');
-      });
-
-      options.forEach(opt => {
-        opt.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const val = opt.getAttribute('data-value');
-          selectedText.textContent = val;
-          hiddenInput.value = val;
-          options.forEach(o => o.classList.remove('selected'));
-          opt.classList.add('selected');
-          panel.classList.remove('open');
-          trigger.classList.remove('active');
-          if (wrapper.id === 'kolasCustomWrap') {
-            toggleCustomBox('kolasCustomBox', val === '기타 시험인증 직접입력');
-          }
-          calculateProgress();
-        });
-      });
-    });
-
-    document.addEventListener('click', () => {
-      document.querySelectorAll('.custom-options-panel').forEach(p => p.classList.remove('open'));
-      document.querySelectorAll('.custom-select-trigger').forEach(t => t.classList.remove('active'));
-    });
-
-    function calculateProgress() {
-      let answered = 0;
-      const totalQuestions = 10;
-      const q1Inputs = document.querySelectorAll('[data-q="1"] input');
-      let q1Filled = 0;
-      q1Inputs.forEach(i => { if (i.value.trim()) q1Filled++; });
-      if (q1Filled >= 3) answered++;
-
-      const q2Inputs = document.querySelectorAll('[data-q="2"] input');
-      let q2Filled = 0;
-      q2Inputs.forEach(i => { if (i.value.trim()) q2Filled++; });
-      if (q2Filled >= 2) answered++;
-
-      if (document.querySelector('input[name="trl"]:checked')) answered++;
-      if (document.querySelector('input[name="targetType"]:checked')) answered++;
-
-      const techSummary = document.querySelector('textarea[name="techSummary"]');
-      if (techSummary && techSummary.value.trim().length >= 10) answered++;
-
-      const diffFactor = document.querySelector('input[name="diffFactor"]');
-      if (diffFactor && diffFactor.value) answered++;
-
-      const targetMarket = document.querySelector('input[name="targetMarket"]');
-      const pocStatus = document.querySelector('input[name="pocStatus"]');
-      if (targetMarket && targetMarket.value && pocStatus && pocStatus.value) answered++;
-
-      const kolasPlan = document.querySelector('input[name="kolasPlan"]');
-      if (kolasPlan && kolasPlan.value) answered++;
-
-      const fundingScale = document.querySelector('input[name="fundingScale"]');
-      const researchCrew = document.querySelector('input[name="researchCrew"]');
-      if (fundingScale && fundingScale.value && researchCrew && researchCrew.value) answered++;
-
-      const perksChecked = document.querySelectorAll('input[name="perks"]:checked, #perksNoneInput:checked');
-      if (perksChecked.length > 0) answered++;
-
-      const percent = Math.min(100, Math.round((answered / totalQuestions) * 100));
-      document.getElementById('answeredCount').textContent = answered;
-      document.getElementById('progressPercent').textContent = percent + '%';
-      document.getElementById('progressFill').style.width = percent + '%';
-    }
-
-    document.querySelectorAll('.track-input, input, textarea').forEach(el => {
-      el.addEventListener('input', calculateProgress);
-      el.addEventListener('change', calculateProgress);
-    });
-
-    document.querySelectorAll('.mini-chips').forEach(container => {
-      const chips = container.querySelectorAll('.mini-chip');
-      chips.forEach(chip => {
-        const input = chip.querySelector('input');
-        chip.addEventListener('click', () => {
-          if (input.type === 'radio') {
-            chips.forEach(c => c.classList.remove('active'));
-            chip.classList.add('active');
-            input.checked = true;
-          } else if (input.type === 'checkbox') {
-            setTimeout(() => {
-              chip.classList.toggle('active', input.checked);
-            }, 10);
-          }
-          calculateProgress();
-        });
-      });
-    });
-
-    function toggleCustomBox(id, show) {
-      const el = document.getElementById(id);
-      if (show) {
-        el.classList.add('open');
-        el.querySelector('input').focus();
-      } else {
-        el.classList.remove('open');
-        el.querySelector('input').value = '';
-      }
-    }
-
-    const perksNoneBtn = document.getElementById('perksNoneBtn');
-    const perksNoneInput = document.getElementById('perksNoneInput');
-    perksNoneBtn.addEventListener('click', (e) => {
-      if (e.target !== perksNoneInput) {
-        perksNoneInput.checked = !perksNoneInput.checked;
-      }
-      perksNoneBtn.classList.toggle('active', perksNoneInput.checked);
-      calculateProgress();
-    });
-
-    const fileInput = document.getElementById('companyFile');
-    const fileChosenIndicator = document.getElementById('fileChosenIndicator');
-    fileInput.addEventListener('change', () => {
-      if (fileInput.files.length > 0) {
-        const file = fileInput.files[0];
-        fileChosenIndicator.style.display = 'block';
-        fileChosenIndicator.textContent = `✓ 첨부 파일: ${file.name} (${(file.size / (1024 * 1024)).toFixed(2)} MB)`;
-      } else {
-        fileChosenIndicator.style.display = 'none';
-      }
-    });
-
-    function readFileAsBase64(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result.split(',')[1]);
-        reader.onerror = error => reject(error);
-        reader.readAsDataURL(file);
-      });
-    }
-
-    const form = document.getElementById('techAuditForm');
-    const submitBtn = document.getElementById('submitBtn');
-    const btnText = document.getElementById('btnText');
-    const spinner = document.getElementById('spinner');
-    const statusMsg = document.getElementById('statusMsg');
-    
-    // Make Webhook URL & API Key configuration
-    const MAKE_WEBHOOK_URL = "https://hook.eu2.make.com/0k0hodm1rqbhixq0fn419x3msl596dnw";
-    const MAKE_API_KEY = "AQ.Ab8RN6L_VoLIjk3otElcrZUL4tejPSm5I0XUW3bdT_vZn_IzIg";
-    const RECIPIENT_EMAIL = "hacapko@gmail.com";
-
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      const perks = [];
-      if (perksNoneInput.checked) {
-        perks.push(perksNoneInput.value);
-      }
-      document.querySelectorAll('input[name="perks"]:checked').forEach(cb => {
-        perks.push(cb.value);
-      });
-
-      let finalTargetType = form.targetType ? form.targetType.value : "";
-      if (finalTargetType === '기타 직접입력') {
-        finalTargetType = form.targetTypeCustom.value || "기타 개발 영역";
-      }
-
-      let finalKolas = form.kolasPlan.value;
-      if (finalKolas === '기타 시험인증 직접입력') {
-        finalKolas = form.kolasCustom.value || "기타 자체 시험평가";
-      }
-
-      submitBtn.disabled = true;
-      btnText.textContent = "공공 R&D 심사기준 팩트체크 및 AI 분석 보고서 생성 중...";
-      spinner.style.display = "inline-block";
-      statusMsg.className = "status-msg loading";
-      statusMsg.innerHTML = "데이터를 전송중입니다. 잠시만 기다려주세요.";
-
-      let fileData = null;
-      let fileName = null;
-      let fileType = null;
-
-      if (fileInput.files.length > 0) {
-        const file = fileInput.files[0];
-        fileName = file.name;
-        fileType = file.type || "application/octet-stream";
-        try {
-          fileData = await readFileAsBase64(file);
-        } catch (fErr) {
-          console.warn("File reading failed:", fErr);
-        }
-      }
-
-      const payload = {
-        apiKey: MAKE_API_KEY,
-        recipientEmail: RECIPIENT_EMAIL,
-        companyName: form.companyName.value,
-        bizNo: form.bizNo.value,
-        estDate: form.estDate.value,
-        revenueScale: form.revenueScale.value,
-        contactName: form.contactName.value,
-        contactPhone: form.contactPhone.value,
-        contactEmail: form.contactEmail.value,
-        trl: form.trl.value,
-        targetType: finalTargetType,
-        techSummary: form.techSummary.value,
-        diffFactor: form.diffFactor.value,
-        targetMarket: form.targetMarket.value,
-        pocStatus: form.pocStatus.value,
-        kpiTarget: form.kpiTarget.value || "전문 컨설팅 협의",
-        patentInfo: form.patentInfo.value || "특허 없음 (출원 전략 필요)",
-        kolasCheck: finalKolas,
-        fundingScale: form.fundingScale.value,
-        researchCrew: form.researchCrew.value,
-        perks: perks,
-        fileData: fileData,
-        fileName: fileName,
-        fileType: fileType
-      };
-
-      const finishSubmission = () => {
-        statusMsg.className = "status-msg success";
-        statusMsg.innerHTML = "🎉 <b>접수 완료!</b> AI 기술자산화 핀포인트 진단 리포트가 관리자 메일(" + RECIPIENT_EMAIL + ")로 정상 전송되었습니다.";
-        form.reset();
-        fileChosenIndicator.style.display = 'none';
-        document.querySelectorAll('.selected-text').forEach(st => {
-          st.textContent = "눌러서 선택";
-        });
-        calculateProgress();
-        submitBtn.disabled = false;
-        btnText.textContent = "AI 종합 기술진단 및 핀포인트 과제 매칭 요청";
-        spinner.style.display = "none";
-      };
-
-      fetch(MAKE_WEBHOOK_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer " + MAKE_API_KEY
-        },
-        body: JSON.stringify(payload)
-      }).catch(err => console.warn(err));
-
-      setTimeout(finishSubmission, 2000);
-    });
-
-    calculateProgress();
-  </script>
+</div>
+<div class="sec-row">
+<div class="sec-badge">3</div>
+<div class="sec-title">개발 동기, 타깃 수요처 및 실증·공인인증</div>
+</div>
+<div class="q-item" data-q="6">
+<div class="q-head">
+<div class="q-title-row">
+<span class="q-tag">Q6</span>
+<span>기존 시장 기술 대비 핵심 차별점/동기는 무엇인가요?</span>
+<span class="req"></span>
+</div>
+<div class="q-sub">국내외 기술 개발 현황 대비 귀사만의 독창성 근거가 됩니다.</div>
+</div>
+<div class="custom-select-wrapper" data-name="diffFactor">
+<input type="hidden" name="diffFactor" class="track-input" required>
+<div class="custom-select-trigger">
+<span class="selected-text">눌러서 핵심 개발 동기 선택</span>
+<span class="custom-select-arrow"></span>
+</div>
+<div class="custom-options-panel">
+<div class="custom-option" data-value="기존 솔루션 대비 처리 속도·정확도·성능 획기적 개선">기존 솔루션 대비 처리 속도·정확도·성능 획기적 개선</div>
+<div class="custom-option" data-value="외산 고가 원천장비/소프트웨어의 국산화 및 50% 이상 원가 절감">외산 고가 장비/소프트웨어 국산화 및 비용 대폭 절감</div>
+<div class="custom-option" data-value="기존 아날로그·수작업 공정의 AI/디지털 자동화(AX 전환)">기존 수작업 공정의 AI/디지털 완전 자동화(AX 전환)</div>
+<div class="custom-option" data-value="강화된 글로벌 규제(ESG, 탄소배출, 안전기준) 선제적 대응">글로벌 규제(ESG, 탄소배출, 안전기준) 선제 대응</div>
+<div class="custom-option" data-value="이종 산업 기술 융합을 통한 신규 틈새시장(Niche) 개척">이종 산업 기술 융합을 통한 신규 시장 창출</div>
+<div class="custom-option" data-value="기타 독자적 성능 혁신">기타 독자적 성능 혁신</div>
+</div>
+</div>
+</div>
+<div class="q-item" data-q="7">
+<div class="q-head">
+<div class="q-title-row">
+<span class="q-tag">Q7</span>
+<span>주요 타깃 수요처 및 실증(PoC) 검증 현황은 어떠한가요?</span>
+<span class="req"></span>
+</div>
+<div class="q-sub">평가위원들이 가장 중요하게 보는 '판로 확보 및 사업화 실현 가능성'을 증명합니다.</div>
+</div>
+<div class="grid-2col">
+<div class="field-box">
+<label>주요 타깃 수요처 <span class="req"></span></label>
+<div class="custom-select-wrapper" data-name="targetMarket">
+<input type="hidden" name="targetMarket" class="track-input" required>
+<div class="custom-select-trigger">
+<span class="selected-text">눌러서 진입 시장 선택</span>
+<span class="custom-select-arrow"></span>
+</div>
+<div class="custom-options-panel">
+<div class="custom-option" data-value="B2B 대기업·중견 제조공장 및 엔터프라이즈 산업 현장">B2B 대기업·중견 제조공장 및 산업 현장</div>
+<div class="custom-option" data-value="중소기업 및 스타트업·소상공인 (SME 생태계)">중소기업 및 소상공인 (SME)</div>
+<div class="custom-option" data-value="공공기관, 지자체, 공기업 및 국방 조달 시장 (B2G)">공공기관, 지자체 및 국방 조달 (B2G)</div>
+<div class="custom-option" data-value="병원, 의료기관, 제약사 및 헬스케어 클러스터">병원, 의료기관 및 헬스케어 클러스터</div>
+<div class="custom-option" data-value="일반 대중 소비자 (B2C) 및 글로벌 직접 진출">일반 소비자 (B2C) 및 글로벌 직수출</div>
+</div>
+</div>
+</div>
+<div class="field-box">
+<label>수요처 연계 및 실증(PoC) 현황 <span class="req"></span></label>
+<div class="custom-select-wrapper" data-name="pocStatus">
+<input type="hidden" name="pocStatus" class="track-input" required>
+<div class="custom-select-trigger">
+<span class="selected-text">눌러서 실증 현황 선택</span>
+<span class="custom-select-arrow"></span>
+</div>
+<div class="custom-options-panel">
+<div class="custom-option" data-value="구매의향서(LOI) / 구매확약서(LOC) 확보 완료">구매의향서(LOI) / 확약서(LOC) 확보 완료</div>
+<div class="custom-option" data-value="수요기업과 공동 연구개발 또는 실증(PoC) 협의 중">수요처와 공동 R&D / PoC 테스트 협의 중</div>
+<div class="custom-option" data-value="기존 납품·거래선 보유 (제품 개발 시 즉시 채택 예정)">기존 고정 납품선 보유 (즉시 채택 가능)</div>
+<div class="custom-option" data-value="과제 선정 후 1차년도 내 타깃 수요처 발굴 추진 예정">선정 후 1차년도 내 수요처 발굴 추진 예정</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="q-item" data-q="8">
+<div class="q-head">
+<div class="q-title-row">
+<span class="q-tag">Q8</span>
+<span>정량적 성능지표(KPI) 및 공인시험인증 계획은 어떠한가요?</span>
+<span class="req"></span>
+</div>
+<div class="q-sub">공인 시험기관(KOLAS, TTA 등) 검증 계획을 통해 기술 신뢰성을 증명합니다.</div>
+</div>
+<div class="grid-2col">
+<div class="field-box">
+<label>핵심 정량 성능목표치 (KPI)</label>
+<input type="text" name="kpiTarget" placeholder="예: 인식 정확도 98.5% 이상, 지연시간 50ms 이하" class="track-input">
+</div>
+<div class="field-box">
+<label>보유 특허 및 지식재산권 현황</label>
+<input type="text" name="patentInfo" placeholder="예: 등록특허 1건(10-xxxx), 출원 2건, 특허 없음" class="track-input">
+</div>
+</div>
+<div class="field-box" style="margin-top:0.85rem;">
+<label>공인시험평가 검증 기관 및 규격 <span class="req"></span></label>
+<div class="custom-select-wrapper" data-name="kolasPlan" id="kolasCustomWrap">
+<input type="hidden" name="kolasPlan" class="track-input" required id="kolasHiddenInput">
+<div class="custom-select-trigger">
+<span class="selected-text">눌러서 검증 규격/기관 선택</span>
+<span class="custom-select-arrow"></span>
+</div>
+<div class="custom-options-panel">
+<div class="custom-optgroup-label">[S/W 및 ICT 알고리즘 검증]</div>
+<div class="custom-option" data-value="TTA(한국정보통신기술협회) V&V 정량시험성적서 발급">TTA (한국정보통신기술협회) V&V 정량시험성적서 발급</div>
+<div class="custom-option" data-value="GS(Good Software) 인증 1등급 또는 2등급 취득">GS(Good Software) 인증 1등급 또는 2등급 취득</div>
+<div class="custom-option" data-value="공인 시험기관(KTL, KTC 등) SW 벤치마크 테스트 성적서">공인 시험기관(KTL/KTC 등) SW 벤치마크 성적서</div>
+<div class="custom-optgroup-label">[국가공인시험기관 (KOLAS 물성/신뢰성)]</div>
+<div class="custom-option" data-value="KOLAS 공인시험기관(KTL/KTC/KCL/KTR 등) 성적서 발급">KOLAS 공인시험기관(KTL/KTC/KCL/KTR 등) 성적서 발급</div>
+<div class="custom-option" data-value="KATRI/FITI 시험연구원 공인 신뢰성/유해물질 평가">KATRI / FITI 시험연구원 신뢰성 및 유해물질 평가</div>
+<div class="custom-optgroup-label">[전기안전·전자파·글로벌 규격]</div>
+<div class="custom-option" data-value="KC 전파인증 / 전기용품안전인증">국내 KC 전파인증 및 전기안전인증</div>
+<div class="custom-option" data-value="해외 규격 인증 (CE, FCC, UL, RoHS 등)">글로벌 규격 인증 (CE, FCC, UL, RoHS 등)</div>
+<div class="custom-optgroup-label">[바이오·의료기기 및 현장실증]</div>
+<div class="custom-option" data-value="식약처 의료기기 GMP 및 공인 시험성적서">식약처 의료기기 GMP 및 공인 시험성적서</div>
+<div class="custom-option" data-value="ISO 13485 (의료기기 품질경영시스템) 및 임상실증">ISO 13485 의료기기 인증 및 병원 임상실증</div>
+<div class="custom-option" data-value="수요처 입회 필드 테스트 및 성능평가 결과보고서">수요처 입회 필드 테스트 및 결과보고서</div>
+<div class="custom-option" data-value="공인시험기관 선정 컨설팅 및 시험설계 지원 희망">공인시험기관 선정 컨설팅 및 시험설계 지원 희망</div>
+<div class="custom-option" data-value="기타 시험인증 직접입력">+ 기타 시험인증 (직접 입력)</div>
+</div>
+</div>
+</div>
+<div id="kolasCustomBox" class="custom-box">
+<input type="text" name="kolasCustom" placeholder="희망하는 공인인증 규격을 입력하세요 (예: DNV 선급인증, MIL-STD-810H)">
+</div>
+</div>
+<div class="sec-row">
+<div class="sec-badge">4</div>
+<div class="sec-title">희망 정부지원금 규모 및 보유 가점</div>
+</div>
+<div class="q-item" data-q="9">
+<div class="q-head">
+<div class="q-title-row">
+<span class="q-tag">Q9</span>
+<span>희망 정부지원금(출연금) 규모와 전담 연구인력은 어느 정도인가요?</span>
+<span class="req"></span>
+</div>
+<div class="q-sub">기업 규모에 적합한 최적 트랙을 선별합니다.</div>
+</div>
+<div class="grid-2col">
+<div class="field-box">
+<label>희망 정부지원금 규모 (눌러서 선택) <span class="req"></span></label>
+<div class="custom-select-wrapper" data-name="fundingScale">
+<input type="hidden" name="fundingScale" class="track-input" required>
+<div class="custom-select-trigger">
+<span class="selected-text">눌러서 희망 금액대 선택</span>
+<span class="custom-select-arrow"></span>
+</div>
+<div class="custom-options-panel">
+<div class="custom-option" data-value="1억 원 이하">1억 원 이하</div>
+<div class="custom-option" data-value="1억 원 초과 ~ 3억 원">1억 원 초과 ~ 3억 원</div>
+<div class="custom-option" data-value="3억 원 초과 ~ 5억 원">3억 원 초과 ~ 5억 원</div>
+<div class="custom-option" data-value="5억 원 초과 ~ 10억 원">5억 원 초과 ~ 10억 원</div>
+<div class="custom-option" data-value="10억 원 초과 ~ 20억 원">10억 원 초과 ~ 20억 원</div>
+<div class="custom-option" data-value="20억 원 초과 ~ 50억 원">20억 원 초과 ~ 50억 원</div>
+<div class="custom-option" data-value="50억 원 이상">50억 원 이상</div>
+</div>
+</div>
+</div>
+<div class="field-box">
+<label>사내 자체 연구개발 인력 현황 <span class="req">*</span></label>
+<div class="custom-select-wrapper" data-name="researchCrew">
+<input type="hidden" name="researchCrew" class="track-input" required>
+<div class="custom-select-trigger">
+<span class="selected-text">눌러서 연구인력 규모 선택</span>
+<span class="custom-select-arrow"></span>
+</div>
+<div class="custom-options-panel">
+<div class="custom-option" data-value="전담 연구원 0명 (대표자 직접 개발 또는 외주 용역 중심)">전담 연구원 0명 (대표자 직접 개발 또는 외주 위탁)</div>
+<div class="custom-option" data-value="전담 연구원 1~2명 (초기 연구개발전담부서 요건)">전담 연구원 1~2명 (초기 R&D 인력)</div>
+<div class="custom-option" data-value="전담 연구원 3~5명 (기업부설연구소 정식 운영)">전담 연구원 3~5명 (연구소 정식 운영)</div>
+<div class="custom-option" data-value="전담 연구원 6~10명 이상 (안정적 전문 연구조직)">전담 연구원 6~10명 이상 (전문 석·박사 연구진)</div>
+<div class="custom-option" data-value="전담 연구원 10명 이상 (대규모 사내 R&D 센터)">전담 연구원 10명 이상 (대규모 기업부설연구소)</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="q-item" data-q="10">
+<div class="q-head">
+<div class="q-title-row">
+<span class="q-tag">Q10</span>
+<span>보유 가점 및 우대사항 (공통 R&D 가점)</span>
+</div>
+<div class="q-sub">가점이 없어도 지원 가능하므로 해당사항이 없으면 바로 아래 '해당사항 없음'을 선택하시면 됩니다.</div>
+</div>
+<label class="perks-none-btn" id="perksNoneBtn">
+<input type="checkbox" id="perksNoneInput" value="보유 가점 없음 (기본 자격으로 진행)">
+<span>🔘 현재 보유 가점 없음 (초기 창업기업 원클릭 패스)</span>
+</label>
+<div style="font-size:0.8rem; font-weight:700; color:var(--text-sub); margin: 0.6rem 0 0.4rem 0;">주요 5대 공통 우대 가점 (복수 선택 가능)</div>
+<div class="mini-chips" id="perksCoreChips">
+<label class="mini-chip">
+<input type="checkbox" name="perks" value="벤처기업 인증 (유효기간 내)">
+<span>벤처기업 인증</span>
+</label>
+<label class="mini-chip">
+<input type="checkbox" name="perks" value="기업부설연구소 또는 연구전담부서 보유">
+<span>연구소/전담부서</span>
+</label>
+<label class="mini-chip">
+<input type="checkbox" name="perks" value="이노비즈(Inno-Biz) 또는 메인비즈(Main-Biz) 인증">
+<span>이노비즈 / 메인비즈</span>
+</label>
+<label class="mini-chip">
+<input type="checkbox" name="perks" value="청년창업기업 (대표자 만 39세 이하)">
+<span>청년창업 (만39세 이하)</span>
+</label>
+<label class="mini-chip">
+<input type="checkbox" name="perks" value="여성기업 인증 (여성 대표자)">
+<span>여성기업 확인서</span>
+</label>
+</div>
+<button type="button" class="perks-expander-btn" id="perksToggleBtn">
+<span id="perksToggleText">▼ 추가 특화 가점 항목 8개 더보기</span>
+</button>
+<div class="perks-hidden-tray" id="perksHiddenPanel">
+<div class="mini-chips" id="perksExtraChips">
+<label class="mini-chip">
+<input type="checkbox" name="perks" value="소재·부품·장비(소부장) 전문기업">
+<span>소부장 전문기업</span>
+</label>
+<label class="mini-chip">
+<input type="checkbox" name="perks" value="직무발명보상 우수기업 인증">
+<span>직무발명보상 기업</span>
+</label>
+<label class="mini-chip">
+<input type="checkbox" name="perks" value="지식재산(IP) 스타기업 / 글로벌강소기업">
+<span>IP스타 / 강소기업</span>
+</label>
+<label class="mini-chip">
+<input type="checkbox" name="perks" value="내일채움공제 가입기업">
+<span>내일채움공제 가입</span>
+</label>
+<label class="mini-chip">
+<input type="checkbox" name="perks" value="최근 3년 내 정부 R&D 과제 '우수(혁신)' 판정 이력">
+<span>과거 R&D 우수판정</span>
+</label>
+<label class="mini-chip">
+<input type="checkbox" name="perks" value="산학연 협력체 (대학/출연연과 MOU 또는 위탁계약)">
+<span>산학연 협력체 (MOU)</span>
+</label>
+<label class="mini-chip">
+<input type="checkbox" name="perks" value="비수도권 / 규제자유특구 / 고용위기지역 입주기업">
+<span>비수도권 / 특구 입주</span>
+</label>
+<label class="mini-chip active">
+<input type="checkbox" name="perks" value="세금체납 및 채무불이행 없음 (필수 자격)" checked>
+<span>국세·지방세 완납 (필수)</span>
+</label>
+</div>
+</div>
+</div>
+<div class="sec-row">
+<div class="sec-badge">5</div>
+<div class="sec-title">기업 소개자료 / IR 덱 첨부 (선택)</div>
+</div>
+<div class="q-item">
+<div class="q-head">
+<div class="q-title-row">
+<span class="q-tag">FILE</span>
+<span>회사소개서, IR 자료, 사업자등록증 첨부</span>
+</div>
+<div class="q-sub">보유하신 PDF, 이미지, 문서 파일을 첨부해 주시면 AI가 문서 본문을 직접 분석하여 정밀 진단에 반영합니다.</div>
+</div>
+<div class="file-upload-box" id="fileDropBox">
+<input type="file" id="companyFile" accept=".pdf,.png,.jpg,.jpeg,.txt,.doc,.docx,.ppt,.pptx">
+<div class="file-label-main">📁 클릭하여 회사소개서 또는 IR 자료 첨부하기</div>
+<div class="file-label-sub">PDF, PNG, JPG, DOCX, PPTX 지원 (최대 15MB, 선택 사항)</div>
+<div class="file-chosen-indicator" id="fileChosenIndicator"></div>
+</div>
+</div>
+<div class="submit-area">
+<button type="submit" class="btn-submit" id="submitBtn">
+<span id="btnText">AI 종합 기술진단 및 핀포인트 과제 매칭 요청</span>
+<div class="spinner" id="spinner"></div>
+</button>
+<div class="status-msg" id="statusMsg"></div>
+</div>
+</form>
+</div>
+<script>
+document.querySelectorAll('.custom-select-wrapper').forEach(wrapper => {
+const trigger = wrapper.querySelector('.custom-select-trigger');
+const panel = wrapper.querySelector('.custom-options-panel');
+const hiddenInput = wrapper.querySelector('input[type="hidden"]');
+const selectedText = trigger.querySelector('.selected-text');
+const options = wrapper.querySelectorAll('.custom-option');
+trigger.addEventListener('click', (e) => {
+e.stopPropagation();
+document.querySelectorAll('.custom-options-panel').forEach(p => {
+if (p !== panel) p.classList.remove('open');
+});
+document.querySelectorAll('.custom-select-trigger').forEach(t => {
+if (t !== trigger) t.classList.remove('active');
+});
+panel.classList.toggle('open');
+trigger.classList.toggle('active');
+});
+options.forEach(opt => {
+opt.addEventListener('click', (e) => {
+e.stopPropagation();
+const val = opt.getAttribute('data-value');
+selectedText.textContent = val;
+hiddenInput.value = val;
+options.forEach(o => o.classList.remove('selected'));
+opt.classList.add('selected');
+panel.classList.remove('open');
+trigger.classList.remove('active');
+if (wrapper.id === 'kolasCustomWrap') {
+toggleCustomBox('kolasCustomBox', val === '기타 시험인증 직접입력');
+}
+calculateProgress();
+});
+});
+});
+document.addEventListener('click', () => {
+document.querySelectorAll('.custom-options-panel').forEach(p => p.classList.remove('open'));
+document.querySelectorAll('.custom-select-trigger').forEach(t => t.classList.remove('active'));
+});
+function calculateProgress() {
+let answered = 0;
+const totalQuestions = 10;
+const q1Inputs = document.querySelectorAll('[data-q="1"] input');
+let q1Filled = 0;
+q1Inputs.forEach(i => { if (i.value.trim()) q1Filled++; });
+if (q1Filled >= 3) answered++;
+const q2Inputs = document.querySelectorAll('[data-q="2"] input');
+let q2Filled = 0;
+q2Inputs.forEach(i => { if (i.value.trim()) q2Filled++; });
+if (q2Filled >= 2) answered++;
+if (document.querySelector('input[name="trl"]:checked')) answered++;
+if (document.querySelector('input[name="targetType"]:checked')) answered++;
+const techSummary = document.querySelector('textarea[name="techSummary"]');
+if (techSummary && techSummary.value.trim().length >= 10) answered++;
+const diffFactor = document.querySelector('input[name="diffFactor"]');
+if (diffFactor && diffFactor.value) answered++;
+const targetMarket = document.querySelector('input[name="targetMarket"]');
+const pocStatus = document.querySelector('input[name="pocStatus"]');
+if (targetMarket && targetMarket.value && pocStatus && pocStatus.value) answered++;
+const kolasPlan = document.querySelector('input[name="kolasPlan"]');
+if (kolasPlan && kolasPlan.value) answered++;
+const fundingScale = document.querySelector('input[name="fundingScale"]');
+const researchCrew = document.querySelector('input[name="researchCrew"]');
+if (fundingScale && fundingScale.value && researchCrew && researchCrew.value) answered++;
+const perksChecked = document.querySelectorAll('input[name="perks"]:checked, #perksNoneInput:checked');
+if (perksChecked.length > 0) answered++;
+const percent = Math.min(100, Math.round((answered / totalQuestions) * 100));
+document.getElementById('answeredCount').textContent = answered;
+document.getElementById('progressPercent').textContent = percent + '%';
+document.getElementById('progressFill').style.width = percent + '%';
+}
+document.querySelectorAll('.track-input, input, textarea').forEach(el => {
+el.addEventListener('input', calculateProgress);
+el.addEventListener('change', calculateProgress);
+});
+document.querySelectorAll('.mini-chips').forEach(container => {
+const chips = container.querySelectorAll('.mini-chip');
+chips.forEach(chip => {
+const input = chip.querySelector('input');
+chip.addEventListener('click', () => {
+if (input.type === 'radio') {
+chips.forEach(c => c.classList.remove('active'));
+chip.classList.add('active');
+input.checked = true;
+if (chip.id === 'targetCustomBtn') {
+toggleCustomBox('targetCustomBox', true);
+} else if (chip.closest('#targetTypeChips')) {
+toggleCustomBox('targetTypeChips', false);
+}
+} else if (input.type === 'checkbox') {
+setTimeout(() => {
+chip.classList.toggle('active', input.checked);
+}, 10);
+}
+calculateProgress();
+});
+});
+});
+function toggleCustomBox(id, show) {
+const el = document.getElementById(id);
+if (show) {
+el.classList.add('open');
+el.querySelector('input').focus();
+} else {
+el.classList.remove('open');
+el.querySelector('input').value = '';
+}
+}
+const perksNoneBtn = document.getElementById('perksNoneBtn');
+const perksNoneInput = document.getElementById('perksNoneInput');
+const perksToggleBtn = document.getElementById('perksToggleBtn');
+const perksToggleText = document.getElementById('perksToggleText');
+const perksHiddenPanel = document.getElementById('perksHiddenPanel');
+perksNoneBtn.addEventListener('click', (e) => {
+if (e.target !== perksNoneInput) {
+perksNoneInput.checked = !perksNoneInput.checked;
+}
+perksNoneBtn.classList.toggle('active', perksNoneInput.checked);
+if (perksNoneInput.checked) {
+document.querySelectorAll('input[name="perks"]').forEach(cb => {
+if (cb.value.indexOf('세금체납') === -1) {
+cb.checked = false;
+cb.closest('.mini-chip').classList.remove('active');
+}
+});
+}
+calculateProgress();
+});
+document.querySelectorAll('input[name="perks"]').forEach(cb => {
+cb.addEventListener('change', () => {
+if (cb.checked && cb.value.indexOf('세금체납') === -1) {
+perksNoneInput.checked = false;
+perksNoneBtn.classList.remove('active');
+}
+calculateProgress();
+});
+});
+let isPerksOpen = false;
+perksToggleBtn.addEventListener('click', () => {
+isPerksOpen = !isPerksOpen;
+perksHiddenPanel.classList.toggle('open', isPerksOpen);
+perksToggleText.textContent = isPerksOpen ? '▲ 추가 특화 가점 항목 8개 접기' : '▼ 추가 특화 가점 항목 8개 더보기';
+});
+const fileInput = document.getElementById('companyFile');
+const fileChosenIndicator = document.getElementById('fileChosenIndicator');
+fileInput.addEventListener('change', () => {
+if (fileInput.files.length > 0) {
+const file = fileInput.files[0];
+fileChosenIndicator.style.display = 'block';
+fileChosenIndicator.textContent = ✓ 첨부 파일: ${file.name} (${(file.size / (1024 * 1024)).toFixed(2)} MB);
+} else {
+fileChosenIndicator.style.display = 'none';
+}
+});
+function readFileAsBase64(file) {
+return new Promise((resolve, reject) => {
+const reader = new FileReader();
+reader.onload = () => {
+const base64String = reader.result.split(',')[1];
+resolve(base64String);
+};
+reader.onerror = error => reject(error);
+reader.readAsDataURL(file);
+});
+}
+const form = document.getElementById('techAuditForm');
+const submitBtn = document.getElementById('submitBtn');
+const btnText = document.getElementById('btnText');
+const spinner = document.getElementById('spinner');
+const statusMsg = document.getElementById('statusMsg');
+const MAKE_WEBHOOK_URL = "https://hook.eu2.make.com/0k0hodm1rqbhixq0fn419x3msl596dnw";
+const MAKE_API_KEY = "AQ.Ab8RN6L_VoLIjk3otElcrZUL4tejPSm5I0XUW3bdT_vZn_IzIg";
+const RECIPIENT_EMAIL = "hacapko@gmail.com";
+form.addEventListener('submit', async (e) => {
+e.preventDefault();
+const perks = [];
+if (perksNoneInput.checked) {
+perks.push(perksNoneInput.value);
+}
+document.querySelectorAll('input[name="perks"]:checked').forEach(cb => {
+perks.push(cb.value);
+});
+let finalTargetType = form.targetType ? form.targetType.value : "";
+if (finalTargetType === '기타 직접입력') {
+finalTargetType = form.targetTypeCustom.value || "기타 개발 영역";
+}
+let finalKolas = form.kolasPlan.value;
+if (finalKolas === '기타 시험인증 직접입력') {
+finalKolas = form.kolasCustom.value || "기타 자체 시험평가";
+}
+submitBtn.disabled = true;
+btnText.textContent = "공공 R&D 심사기준 팩트체크 및 AI 분석 보고서 생성 중...";
+spinner.style.display = "inline-block";
+statusMsg.className = "status-msg loading";
+statusMsg.innerHTML = "데이터를 전송중입니다. 잠시만 기다려주세요.";
+let fileData = null;
+let fileName = null;
+let fileType = null;
+if (fileInput.files.length > 0) {
+const file = fileInput.files[0];
+fileName = file.name;
+fileType = file.type || "application/octet-stream";
+try {
+fileData = await readFileAsBase64(file);
+} catch (fErr) {
+console.warn("File reading failed:", fErr);
+}
+}
+const payload = {
+apiKey: MAKE_API_KEY,
+recipientEmail: RECIPIENT_EMAIL,
+companyName: form.companyName.value,
+bizNo: form.bizNo.value,
+estDate: form.estDate.value,
+revenueScale: form.revenueScale.value,
+contactName: form.contactName.value,
+contactPhone: form.contactPhone.value,
+contactEmail: form.contactEmail.value,
+trl: form.trl.value,
+targetType: finalTargetType,
+techSummary: form.techSummary.value,
+diffFactor: form.diffFactor.value,
+targetMarket: form.targetMarket.value,
+pocStatus: form.pocStatus.value,
+kpiTarget: form.kpiTarget.value || "전문 컨설팅 협의",
+patentInfo: form.patentInfo.value || "특허 없음 (출원 전략 필요)",
+kolasCheck: finalKolas,
+fundingScale: form.fundingScale.value,
+researchCrew: form.researchCrew.value,
+perks: perks,
+fileData: fileData,
+fileName: fileName,
+fileType: fileType
+};
+const finishSubmission = () => {
+statusMsg.className = "status-msg success";
+statusMsg.innerHTML = "🎉 <b>접수 완료!</b> AI 기술자산화 핀포인트 진단 리포트가 관리자 메일(" + RECIPIENT_EMAIL + ")로 정상 전송되었습니다.";
+form.reset();
+fileChosenIndicator.style.display = 'none';
+document.querySelectorAll('.selected-text').forEach(st => {
+st.textContent = "눌러서 선택";
+});
+calculateProgress();
+submitBtn.disabled = false;
+btnText.textContent = "AI 종합 기술진단 및 핀포인트 과제 매칭 요청";
+spinner.style.display = "none";
+};
+fetch(MAKE_WEBHOOK_URL, {
+method: "POST",
+mode: "no-cors",
+headers: {
+"Content-Type": "application/json",
+"Authorization": "Bearer " + MAKE_API_KEY
+},
+body: JSON.stringify(payload)
+}).catch(err => console.warn(err));
+setTimeout(finishSubmission, 2000);
+});
+calculateProgress();
+</script>
 </body>
 </html>
