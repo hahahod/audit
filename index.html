@@ -743,21 +743,21 @@
           <div class="q-title-row">
             <span class="q-tag">Q1</span>
             <span>진단 대상 기업의 기본 정보를 입력해 주세요.</span>
-            <span class="req">*</span>
+            <span class="req"></span>
           </div>
           <div class="q-sub">설립일자를 기준으로 초기창업(3년), 창업도약(7년), 중소기업 일반 R&D 적격 트랙이 자동 분류됩니다.</div>
         </div>
         <div class="grid-2col">
           <div class="field-box">
-            <label>기업명 <span class="req">*</span></label>
+            <label>기업명 <span class="req"></span></label>
             <input type="text" name="companyName" required placeholder="기업명을 입력해 주세요" class="track-input">
           </div>
           <div class="field-box">
-            <label>사업자등록번호 <span class="req">*</span></label>
+            <label>사업자등록번호 <span class="req"></span></label>
             <input type="text" name="bizNo" required placeholder="000-00-00000" class="track-input">
           </div>
           <div class="field-box">
-            <label>설립일자 <span class="req">*</span></label>
+            <label>설립일자 <span class="req"></span></label>
             <input type="date" name="estDate" required class="track-input">
           </div>
           <div class="field-box">
@@ -786,21 +786,21 @@
           <div class="q-title-row">
             <span class="q-tag">Q2</span>
             <span>신청 담당자 연락처 및 결과 수신 메일을 입력해 주세요.</span>
-            <span class="req">*</span>
+            <span class="req"></span>
           </div>
           <div class="q-sub">수석 심사위원 평가 리포트 및 기술자산화 핀포인트 과제 매칭 결과가 전달됩니다.</div>
         </div>
         <div class="grid-2col">
           <div class="field-box">
-            <label>담당자 성함 / 직함 <span class="req">*</span></label>
+            <label>담당자 성함 / 직함 <span class="req"></span></label>
             <input type="text" name="contactName" required placeholder="홍길동 수석연구원" class="track-input">
           </div>
           <div class="field-box">
-            <label>연락처 <span class="req">*</span></label>
+            <label>연락처 <span class="req"></span></label>
             <input type="tel" name="contactPhone" required placeholder="010-0000-0000" class="track-input">
           </div>
           <div class="field-box" style="grid-column: 1 / -1;">
-            <label>수신 이메일 주소 <span class="req">*</span></label>
+            <label>수신 이메일 주소 <span class="req"></span></label>
             <input type="email" name="contactEmail" required placeholder="hacapko@gmail.com" value="hacapko@gmail.com" class="track-input">
           </div>
         </div>
@@ -818,6 +818,7 @@
             <span>현재 연구개발 성숙도(TRL) 단계는 어디인가요?</span>
             <span class="req">*</span>
           </div>
+          <div class="q-sub">아이디어 수준부터 양산 실증 단계까지 최적 정부지원금 매칭 트랙을 결정합니다 (1개 선택).</div>
         </div>
         <div class="mini-chips">
           <label class="mini-chip active">
@@ -850,6 +851,7 @@
             <span>최종 개발 목표 형태가 무엇인가요?</span>
             <span class="req">*</span>
           </div>
+          <div class="q-sub">소프트웨어/플랫폼 vs 하드웨어 회로/기구설계 본문 분기를 결정합니다.</div>
         </div>
         <div class="mini-chips" id="targetTypeChips">
           <label class="mini-chip active">
@@ -903,6 +905,7 @@
         </div>
       </div>
 
+      <!-- Q5: 핵심 기술 개요 및 3대 작성 가이드 복원 -->
       <div class="q-item" data-q="5">
         <div class="q-head">
           <div class="q-title-row">
@@ -910,8 +913,22 @@
             <span>핵심 기술/서비스 개요 및 주요 기능을 요약해 주세요.</span>
             <span class="req">*</span>
           </div>
+          <div class="q-sub">구체적인 메커니즘을 적어주실수록 AI가 정확한 기술자산화 R&D 과제명을 도출합니다.</div>
         </div>
-        <textarea name="techSummary" required placeholder="핵심 기술 및 주요 기능을 입력해 주세요." class="track-input"></textarea>
+
+        <div class="guide-callout">
+          <b>💡 정밀 분석을 위한 3대 핵심 작성 기준</b> (비기술/컨설팅 기업은 현재 업무 노하우를 적어주셔도 됩니다):
+          <ul class="guide-list">
+            <li><b>1. 해결 과제:</b> 기존 시장/고객이 겪는 한계점 및 수작업의 불편함</li>
+            <li><b>2. 기술 메커니즘:</b> 귀사가 개발 또는 자동화할 핵심 알고리즘/프로세스/기능</li>
+            <li><b>3. 목표 성능치:</b> 개발 완료 시 기대되는 정량적 성능치(정확도 %, 처리속도 단축 등)</li>
+          </ul>
+        </div>
+
+        <textarea name="techSummary" required placeholder="[작성 예시]
+1. 기존 한계: 산업 현장의 위험 요소 점검이 안전 관리자의 육안에 의존하여 오탐률이 높음.
+2. 개발 내용: 영상 인식 AI 모델과 온디바이스 엣지 게이트웨이를 결합하여 위험 구역 침범을 실시간 탐지하는 자동화 엔진 개발.
+3. 혁신 성능: 실시간 위험 탐지 정확도 98% 이상 달성 및 사고 대응 지연시간 50% 단축." class="track-input"></textarea>
       </div>
 
       <div class="sec-row">
@@ -926,6 +943,7 @@
             <span>기존 시장 기술 대비 핵심 차별점/동기는 무엇인가요?</span>
             <span class="req">*</span>
           </div>
+          <div class="q-sub">국내외 기술 개발 현황 대비 귀사만의 독창성 근거가 됩니다.</div>
         </div>
         <div class="custom-select-wrapper" data-name="diffFactor">
           <input type="hidden" name="diffFactor" class="track-input" required>
@@ -948,12 +966,13 @@
           <div class="q-title-row">
             <span class="q-tag">Q7</span>
             <span>주요 타깃 수요처 및 실증(PoC) 검증 현황은 어떠한가요?</span>
-            <span class="req">*</span>
+            <span class="req"></span>
           </div>
+          <div class="q-sub">평가위원들이 가장 중요하게 보는 사업화 실현 가능성을 증명합니다.</div>
         </div>
         <div class="grid-2col">
           <div class="field-box">
-            <label>주요 타깃 수요처 <span class="req">*</span></label>
+            <label>주요 타깃 수요처 <span class="req"></span></label>
             <div class="custom-select-wrapper" data-name="targetMarket">
               <input type="hidden" name="targetMarket" class="track-input" required>
               <div class="custom-select-trigger">
@@ -993,8 +1012,9 @@
           <div class="q-title-row">
             <span class="q-tag">Q8</span>
             <span>정량적 성능지표(KPI) 및 공인시험인증 계획은 어떠한가요?</span>
-            <span class="req">*</span>
+            <span class="req"></span>
           </div>
+          <div class="q-sub">공인 시험기관 검증 계획을 통해 기술 신뢰성을 증명합니다.</div>
         </div>
         <div class="grid-2col">
           <div class="field-box">
@@ -1007,7 +1027,7 @@
           </div>
         </div>
         <div class="field-box" style="margin-top:0.85rem;">
-          <label>공인시험평가 검증 기관 및 규격 <span class="req">*</span></label>
+          <label>공인시험평가 검증 기관 및 규격 <span class="req"></span></label>
           <div class="custom-select-wrapper" data-name="kolasPlan" id="kolasCustomWrap">
             <input type="hidden" name="kolasPlan" class="track-input" required id="kolasHiddenInput">
             <div class="custom-select-trigger">
@@ -1037,12 +1057,13 @@
           <div class="q-title-row">
             <span class="q-tag">Q9</span>
             <span>희망 정부지원금(출연금) 규모와 전담 연구인력은 어느 정도인가요?</span>
-            <span class="req">*</span>
+            <span class="req"></span>
           </div>
+          <div class="q-sub">기업 규모에 적합한 최적 트랙을 선별합니다.</div>
         </div>
         <div class="grid-2col">
           <div class="field-box">
-            <label>희망 정부지원금 규모 <span class="req">*</span></label>
+            <label>희망 정부지원금 규모 <span class="req"></span></label>
             <div class="custom-select-wrapper" data-name="fundingScale">
               <input type="hidden" name="fundingScale" class="track-input" required>
               <div class="custom-select-trigger">
@@ -1082,6 +1103,7 @@
             <span class="q-tag">Q10</span>
             <span>보유 가점 및 우대사항 (공통 R&D 가점)</span>
           </div>
+          <div class="q-sub">가점이 없어도 지원 가능하므로 해당사항이 없으면 바로 선택하실 수 있습니다.</div>
         </div>
         <label class="perks-none-btn" id="perksNoneBtn">
           <input type="checkbox" id="perksNoneInput" value="보유 가점 없음 (기본 자격으로 진행)">
@@ -1110,6 +1132,7 @@
             <span class="q-tag">FILE</span>
             <span>회사소개서, IR 자료, 사업자등록증 첨부</span>
           </div>
+          <div class="q-sub">보유하신 PDF, 이미지 파일을 첨부해 주시면 AI가 직접 분석합니다.</div>
         </div>
         <div class="file-upload-box" id="fileDropBox">
           <input type="file" id="companyFile" accept=".pdf,.png,.jpg,.jpeg,.txt,.doc,.docx,.ppt,.pptx">
