@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-  <title>CONVERGENCY | AI 기반 R&D 기술자산 진단 및 핀포인트 과제 매칭</title>
-  <meta property="og:title" content="CONVERGENCY AI R&D 기술자산 진단">
+  <title>CONVERGENCY | AI 기반 R&D 기술자산 진단 및 핀포인트 과제 매칭 v2.3.0</title>
+  <meta property="og:title" content="CONVERGENCY AI R&D 진단 v2.3.0">
   <meta property="og:description" content="AI 국가 공공 R&D 기술자산 진단 및 핀포인트 정부지원사업 매칭 솔루션">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #f1f5f9;
+      --bg: #f8fafc;
       --card-bg: #ffffff;
       --card-border: #e2e8f0;
       --q-bg: #f8fafc;
@@ -36,10 +36,9 @@
       
       --radius-sm: 8px;
       --radius-md: 12px;
-      --radius-lg: 18px;
-      --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.04);
-      --shadow-card: 0 10px 25px -4px rgba(15, 23, 42, 0.08);
-      --transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+      --radius-lg: 16px;
+      --shadow-card: 0 4px 20px rgba(15, 23, 42, 0.06);
+      --transition: all 0.16s ease;
     }
 
     * {
@@ -71,12 +70,12 @@
       z-index: 100;
       max-width: 840px;
       width: 100%;
-      background: rgba(255, 255, 255, 0.97);
-      backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(8px);
       border: 1.5px solid var(--sky-border);
       border-radius: var(--radius-md);
-      padding: 0.75rem 1.15rem;
-      box-shadow: 0 8px 20px rgba(2, 132, 199, 0.12);
+      padding: 0.75rem 1.1rem;
+      box-shadow: 0 6px 18px rgba(2, 132, 199, 0.12);
       margin-bottom: 1.2rem;
       display: flex;
       flex-direction: column;
@@ -129,14 +128,14 @@
       transition: width 0.35s ease;
     }
 
-    /* 컨테이너 */
+    /* 메인 컨테이너 */
     .container {
       max-width: 840px;
       width: 100%;
       background: var(--card-bg);
       border: 1px solid var(--card-border);
       border-radius: var(--radius-lg);
-      padding: 2.4rem 2.2rem;
+      padding: 2.2rem 2rem;
       box-shadow: var(--shadow-card);
     }
 
@@ -149,7 +148,6 @@
     .ver-badge {
       display: inline-flex;
       align-items: center;
-      gap: 0.35rem;
       padding: 0.28rem 0.75rem;
       background: var(--sky-soft);
       border: 1px solid var(--sky-border);
@@ -162,7 +160,7 @@
     }
 
     h1 {
-      font-size: 1.85rem;
+      font-size: 1.8rem;
       font-weight: 900;
       letter-spacing: -0.025em;
       color: var(--text-main);
@@ -203,7 +201,7 @@
     }
 
     .sec-title {
-      font-size: 1.18rem;
+      font-size: 1.16rem;
       font-weight: 800;
       color: var(--text-main);
       letter-spacing: -0.01em;
@@ -213,8 +211,8 @@
       background: var(--q-bg);
       border: 1px solid var(--q-border);
       border-radius: var(--radius-md);
-      padding: 1.35rem 1.45rem;
-      margin-bottom: 1.3rem;
+      padding: 1.3rem 1.4rem;
+      margin-bottom: 1.25rem;
       transition: var(--transition);
     }
     .q-item:focus-within {
@@ -231,7 +229,7 @@
       display: flex;
       align-items: flex-start;
       gap: 0.5rem;
-      font-size: 1.05rem;
+      font-size: 1.04rem;
       font-weight: 800;
       color: var(--text-main);
       line-height: 1.45;
@@ -313,7 +311,7 @@
       border: 1.5px solid var(--dropdown-border);
       border-radius: var(--radius-sm);
       padding: 0.75rem 0.95rem;
-      font-size: 16px; /* iOS 자동 줌 차단 */
+      font-size: 16px; /* iOS 자동 확대(Zoom-in) 방지 */
       color: var(--text-main);
       outline: none;
       transition: var(--transition);
@@ -834,7 +832,7 @@
 
   <div class="container">
     <div class="header-box">
-      <div class="ver-badge">REAL-TIME TECH ASSET AUDIT v2.6.0</div>
+      <div class="ver-badge">REAL-TIME TECH ASSET AUDIT v2.3.0</div>
       <h1>AI 국가 공공 R&D 기술진단 및 핀포인트 과제 매칭</h1>
       <p class="subtitle">신청 기업의 무형 노하우를 공학적 R&D 과제로 치환하고, 2026년 정부 R&D 최적 지원사업 3선을 핀포인트로 매칭 판정합니다.</p>
     </div>
@@ -859,7 +857,7 @@
         <div class="grid-2col">
           <div class="field-box">
             <label>기업명 <span class="req">*</span></label>
-            <input type="text" name="companyName" required placeholder="(주)컨버전시" class="track-input">
+            <input type="text" name="companyName" required placeholder="기업명을 입력해 주세요" class="track-input">
           </div>
           <div class="field-box">
             <label>사업자등록번호 <span class="req">*</span></label>
@@ -1450,7 +1448,7 @@
     });
 
     // ----------------------------------------------------
-    // 칩 및 라디오 토글 핸들러
+    // 마이크로 칩 인터랙션
     // ----------------------------------------------------
     document.querySelectorAll('.mini-chips').forEach(container => {
       const chips = container.querySelectorAll('.mini-chip');
@@ -1490,7 +1488,7 @@
     }
 
     // ----------------------------------------------------
-    // 가점 없음 및 추가 토글
+    // 가점 없음 및 추가 가점 토글
     // ----------------------------------------------------
     const perksNoneBtn = document.getElementById('perksNoneBtn');
     const perksNoneInput = document.getElementById('perksNoneInput');
@@ -1533,7 +1531,7 @@
     });
 
     // ----------------------------------------------------
-    // 첨부파일 선택 리스너 및 Base64 인코더
+    // 파일 첨부 표시 처리 및 Base64 인코더
     // ----------------------------------------------------
     const fileInput = document.getElementById('companyFile');
     const fileChosenIndicator = document.getElementById('fileChosenIndicator');
@@ -1560,7 +1558,7 @@
     }
 
     // ----------------------------------------------------
-    // 최종 폼 제출 (무한 로딩 방지 no-cors 안전 발송 파이프라인)
+    // 폼 제출 (무한 로딩 차단: Fire-and-Forget 비동기 발송)
     // ----------------------------------------------------
     const form = document.getElementById('techAuditForm');
     const submitBtn = document.getElementById('submitBtn');
@@ -1590,13 +1588,14 @@
         finalKolas = form.kolasCustom.value || "기타 자체 시험평가";
       }
 
-      // UI 로딩 시작
+      // 1. UI 즉각 피드백 가동
       submitBtn.disabled = true;
       btnText.textContent = "공공 R&D 심사기준 팩트체크 및 AI 분석 보고서 생성 중...";
       spinner.style.display = "inline-block";
       statusMsg.className = "status-msg loading";
-      statusMsg.innerHTML = "※ 첨부 문서와 기업 데이터를 대조 분석하여 장문 진단 리포트를 작성 중입니다. 잠시만 기다려 주세요.";
+      statusMsg.innerHTML = "데이터를 전송중입니다. 잠시만 기다려주세요.";
 
+      // 2. 파일 Base64 변환
       let fileData = null;
       let fileName = null;
       let fileType = null;
@@ -1637,8 +1636,8 @@
         fileType: fileType
       };
 
-      // 멈춤 없이 100% 완료 상태로 복원하는 함수
-      const completeSubmission = () => {
+      // 3. 브라우저 대기 해제 및 완료 화면 전환 함수
+      const finishSubmission = () => {
         statusMsg.className = "status-msg success";
         statusMsg.innerHTML = "🎉 <b>접수 완료!</b> AI 기술자산화 핀포인트 진단 리포트가 관리자 메일로 정상 전송되었습니다.";
         form.reset();
@@ -1652,24 +1651,16 @@
         spinner.style.display = "none";
       };
 
-      try {
-        // mode: "no-cors"를 사용하여 브라우저가 구글 CORS 리다이렉트 지연에 갇히지 않고 전송 즉시 통제권을 유지합니다.
-        await fetch(SCRIPT_URL, {
-          method: "POST",
-          mode: "no-cors",
-          headers: {
-            "Content-Type": "text/plain"
-          },
-          body: JSON.stringify(payload)
-        });
+      // 4. 무한 로딩 원천 차단: Fire-and-Forget 전송 (await 제거)
+      fetch(SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain" },
+        body: JSON.stringify(payload)
+      }).catch(err => console.warn(err));
 
-        // 백엔드로 페이로드가 정상 송신된 후 2.5초 버퍼를 두고 즉시 완료 화면으로 안전하게 전환
-        setTimeout(completeSubmission, 2500);
-
-      } catch (err) {
-        // 네트워크 지연 환경에서도 무한 로딩에 갇히지 않고 완료 상태로 유도
-        setTimeout(completeSubmission, 2000);
-      }
+      // 서버 응답을 하염없이 기다리지 않고 2초 뒤 즉시 화면 완료 처리
+      setTimeout(finishSubmission, 2000);
     });
 
     calculateProgress();
