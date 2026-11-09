@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>CONVERGENCY | 기업 기술자산 정밀진단서 (Pre-Audit v2.1.0)</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@700;800;900&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: #111827;
+      --card-border: #1f2937;
+      --input-bg: #0b1120;
+      --border-color: #374151;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --accent-light: rgba(37, 99, 235, 0.15);
+      --text-main: #f8fafc;
+      --text-sub: #9ca3af;
+      --text-muted: #6b7280;
+      --radius: 14px;
+      --radius-sm: 10px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      word-break: keep-all;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.6;
+      padding: 20px 16px 60px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 620px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* Header */
+    .header {
+      padding: 16px 4px 24px;
+      border-bottom: 1px solid var(--card-border);
+      margin-bottom: 24px;
+    }
+
+    .badge {
+      display: inline-block;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #60a5fa;
+      background: var(--accent-light);
+      border: 1px solid rgba(96, 165, 250, 0.3);
+      padding: 4px 12px;
+      border-radius: 9999px;
+      margin-bottom: 12px;
+    }
+
+    .header h1 {
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      margin-bottom: 8px;
+      color: #fff;
+    }
+
+    .header p {
+      font-size: 14px;
+      color: var(--text-sub);
+      line-height: 1.55;
+    }
+
+    /* Section Card */
+    .section-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 22px 18px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+    }
+
+    .section-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .step-tag {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 11px;
+      background: #1e293b;
+      color: #93c5fd;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-weight: 800;
+      border: 1px solid #334155;
+    }
+
+    .section-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+      line-height: 1.45;
+    }
+
+    /* Form Fields */
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
+
+    label {
+      display: block;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #e2e8f0;
+      margin-bottom: 8px;
+    }
+
+    .req {
+      color: #ef4444;
+      margin-left: 3px;
+    }
+
+    input[type="text"],
+    input[type="tel"],
+    input[type="email"],
+    select,
+    textarea {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      color: #fff;
+      font-size: 15px;
+      padding: 13px 15px;
+      font-family: inherit;
+      outline: none;
+      transition: all 0.2s ease;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--accent);
+      background: #0f172a;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+    }
+
+    textarea {
+      min-height: 85px;
+      resize: vertical;
+    }
+
+    /* Choice List (TRL / Perks) */
+    .choice-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .choice-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      background: var(--input-bg);
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .choice-card.selected {
+      background: rgba(37, 99, 235, 0.12);
+      border-color: var(--accent);
+    }
+
+    .choice-card input {
+      margin-top: 3px;
+      accent-color: var(--accent);
+      transform: scale(1.2);
+      flex-shrink: 0;
+    }
+
+    .choice-content {
+      flex: 1;
+    }
+
+    .choice-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 3px;
+    }
+
+    .choice-title {
+      font-size: 14.5px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .choice-tag {
+      font-size: 11px;
+      font-weight: 700;
+      color: #60a5fa;
+      background: rgba(37, 99, 235, 0.2);
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+
+    .choice-desc {
+      font-size: 13px;
+      color: var(--text-sub);
+      line-height: 1.45;
+    }
+
+    /* Submit Button */
+    .submit-btn {
+      width: 100%;
+      background: var(--accent);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 800;
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 4px 18px rgba(37, 99, 235, 0.4);
+      margin-top: 10px;
+      transition: all 0.2s ease;
+    }
+
+    .submit-btn:hover {
+      background: var(--accent-hover);
+    }
+
+    .submit-btn:active {
+      transform: scale(0.98);
+    }
+
+    .submit-btn:disabled {
+      background: #374151;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    /* Reception Box */
+    .reception-box {
+      display: none;
+      background: #0f172a;
+      border: 1px solid #1e3a8a;
+      border-left: 4px solid var(--accent);
+      padding: 26px 20px;
+      border-radius: var(--radius);
+      margin-top: 20px;
+      animation: fadeIn 0.4s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .reception-box h3 {
+      font-size: 18px;
+      font-weight: 900;
+      color: #60a5fa;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .reception-box p {
+      font-size: 14px;
+      color: #e2e8f0;
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }
+
+    .reception-details {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid #1e293b;
+      padding: 14px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      color: #94a3b8;
+      line-height: 1.6;
+    }
+
+    .footer-note {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 28px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div class="badge">CONVERGENCY TECH-AUDIT v2.1.0</div>
+    <h1>기술자산 정밀진단 신청서</h1>
+    <p>공공 R&D 심사 기준(100점 만점)에 맞춘 범용 진단서입니다. 작성된 데이터는 전담 파트너가 48시간 이내 정밀 검토합니다.</p>
+  </div>
+
+  <form id="auditForm" onsubmit="handleSubmit(event)">
+    <!-- STEP 1: 기업 기본 프로필 -->
+    <div class="section-card">
+      <div class="section-title"><span class="step-tag">01</span> 기업 기본 프로필</div>
+      <div class="section-desc">지원사업 신청 자격 및 업력 구간을 판정합니다.</div>
+
+      <div class="form-group">
+        <label>기업명 <span class="req">*</span></label>
+        <input type="text" id="companyName" placeholder="예: 주식회사 컨버전시" required>
+      </div>
+
+      <div class="form-group">
+        <label>사업자등록번호 <span class="req">*</span></label>
+        <input type="tel" id="bizNo" placeholder="예: 000-00-00000" required>
+      </div>
+
+      <div class="form-group">
+        <label>설립일자 (업력 판단용) <span class="req">*</span></label>
+        <input type="text" id="estDate" placeholder="예: 2023년 5월" required>
+      </div>
+
+      <div class="form-group">
+        <label>담당자 성함 / 직함 <span class="req">*</span></label>
+        <input type="text" id="contactName" placeholder="예: 홍길동 연구소장" required>
+      </div>
+
+      <div class="form-group">
+        <label>연락처 (휴대폰 번호) <span class="req">*</span></label>
+        <input type="tel" id="contactPhone" placeholder="예: 010-0000-0000" required>
+      </div>
+
+      <div class="form-group">
+        <label>회신받을 이메일 <span class="req">*</span></label>
+        <input type="email" id="contactEmail" placeholder="예: ceo@company.com" required>
+      </div>
+    </div>
+
+    <!-- STEP 2: 기술 성숙도 TRL -->
+    <div class="section-card">
+      <div class="section-title"><span class="step-tag">02</span> 현재 기술 성숙도 (TRL)</div>
+      <div class="section-desc">보유 기술의 현재 실증 단계를 선택해 주세요.</div>
+
+      <div class="choice-list">
+        <label class="choice-card selected" onclick="selectTrl(this)">
+          <input type="radio" name="trl" value="TRL 1~2" checked>
+          <div class="choice-content">
+            <div class="choice-header">
+              <span class="choice-title">TRL 1 ~ 2 (기초 연구)</span>
+              <span class="choice-tag">개념 정립</span>
+            </div>
+            <p class="choice-desc">기초 원리 연구, 학술 논문, 아이디어 및 알고리즘 기획 단계</p>
+          </div>
+        </label>
+
+        <label class="choice-card" onclick="selectTrl(this)">
+          <input type="radio" name="trl" value="TRL 3~4">
+          <div class="choice-content">
+            <div class="choice-header">
+              <span class="choice-title">TRL 3 ~ 4 (실험실 검증)</span>
+              <span class="choice-tag">PoC 검증</span>
+            </div>
+            <p class="choice-desc">핵심 모듈 구현, 실험실 내 핵심 기능 검증 완료 (TIPS 추천)</p>
+          </div>
+        </label>
+
+        <label class="choice-card" onclick="selectTrl(this)">
+          <input type="radio" name="trl" value="TRL 5~6">
+          <div class="choice-content">
+            <div class="choice-header">
+              <span class="choice-title">TRL 5 ~ 6 (시제품 제작)</span>
+              <span class="choice-tag">MVP 테스트</span>
+            </div>
+            <p class="choice-desc">시제품(MVP) 제작 완료, 유사 실증 환경 테스트 단계 (전략형 추천)</p>
+          </div>
+        </label>
+
+        <label class="choice-card" onclick="selectTrl(this)">
+          <input type="radio" name="trl" value="TRL 7~8">
+          <div class="choice-content">
+            <div class="choice-header">
+              <span class="choice-title">TRL 7 ~ 8 (양산/실증)</span>
+              <span class="choice-tag">현장 실증</span>
+            </div>
+            <p class="choice-desc">실제 운영 환경 검증 완료 및 파일럿 양산 단계 (대형 챌린지 추천)</p>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <!-- STEP 3: 핵심 기술 자산 및 정량 지표 -->
+    <div class="section-card">
+      <div class="section-title"><span class="step-tag">03</span> 핵심 기술 및 성능 지표</div>
+      <div class="section-desc">과제 제안서의 핵심이 되는 기술 자산 정보입니다.</div>
+
+      <div class="form-group">
+        <label>핵심 기술 개요 (1~2줄 요약) <span class="req">*</span></label>
+        <textarea id="techSummary" placeholder="예: 비정형 산업 부품을 99.2% 정밀도로 실시간 분류하는 피지컬 로봇 비전 알고리즘" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>보유 특허 현황 (출원 또는 등록) <span class="req">*</span></label>
+        <input type="text" id="patentInfo" placeholder="예: 등록 1건 (10-202X-XXXXXXX), 출원 2건" required>
+      </div>
+
+      <div class="form-group">
+        <label>기술 성능 목표치 (수치 및 단위 필수) <span class="req">*</span></label>
+        <input type="text" id="kpiTarget" placeholder="예: 인식 지연시간 20ms 이하, 정확도 99% 이상" required>
+      </div>
+
+      <div class="form-group">
+        <label>공인시험성적서(KOLAS 등) 시험 계획</label>
+        <select id="kolasCheck">
+          <option value="자체규격가능">자체 시험규격 정의 가능 (KOLAS 발급 계획 수립 가능)</option>
+          <option value="컨설팅필요" selected>공인 시험기관 및 시험 규격 매핑 지원 필요</option>
+          <option value="SW인증">SW V&V 또는 GS인증 대상 과제</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- STEP 4: 기업 가점 및 재무 요건 -->
+    <div class="section-card">
+      <div class="section-title"><span class="step-tag">04</span> 가점 및 재무 건전성</div>
+      <div class="section-desc">법정 가점(최대 5점) 및 결격 요건을 사전 진단합니다. (중복 선택)</div>
+
+      <div class="choice-list">
+        <label class="choice-card selected" onclick="togglePerk(this)">
+          <input type="checkbox" name="perks" value="벤처기업인증" checked>
+          <div class="choice-content">
+            <p class="choice-title">벤처기업 인증 보유 (또는 신청 예정)</p>
+            <p class="choice-desc">정부 R&D 대부분 과제에서 필수 법정 가점(1~2점) 확보</p>
+          </div>
+        </label>
+
+        <label class="choice-card selected" onclick="togglePerk(this)">
+          <input type="checkbox" name="perks" value="기업부설연구소/전담부서" checked>
+          <div class="choice-content">
+            <p class="choice-title">기업부설연구소 또는 연구전담부서 보유</p>
+            <p class="choice-desc">주관기관 연구 인프라 점수 충족 및 인건비 비목 안정성 확보</p>
+          </div>
+        </label>
+
+        <label class="choice-card" onclick="togglePerk(this)">
+          <input type="checkbox" name="perks" value="민간투자유치">
+          <div class="choice-content">
+            <p class="choice-title">민간 투자유치 이력 보유 (1억 원 이상)</p>
+            <p class="choice-desc">TIPS 및 딥테크 팁스 지원 자격 즉시 매칭 가능</p>
+          </div>
+        </label>
+
+        <label class="choice-card" onclick="togglePerk(this)">
+          <input type="checkbox" name="perks" value="수요처확보">
+          <div class="choice-content">
+            <p class="choice-title">수요처 구매의향서(LOI) 확보 가능</p>
+            <p class="choice-desc">사업화 실현성 배점(25점) 방어 및 구매조건부 과제 대상</p>
+          </div>
+        </label>
+
+        <label class="choice-card selected" onclick="togglePerk(this)">
+          <input type="checkbox" name="perks" value="세금체납없음" checked>
+          <div class="choice-content">
+            <p class="choice-title">국세 및 지방세 완납 (체납 사실 없음)</p>
+            <p class="choice-desc">정부지원금 수령 필수 요건 (체납 시 즉시 컷오프)</p>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <button type="submit" id="submitBtn" class="submit-btn">
+      <i class="fa-solid fa-paper-plane"></i>
+      48시간 무상 Pre-Audit 진단 접수하기
+    </button>
+  </form>
+
+  <div id="receptionBox" class="reception-box">
+    <h3><i class="fa-solid fa-circle-check"></i> 접수 완료 안내</h3>
+    <p>기술자산 정밀진단 데이터가 정상 접수되었습니다.</p>
+    <div class="reception-details">
+      입력하신 기술 데이터와 TRL 단계, 특허 현황을 바탕으로 <strong>전담 파트너가 직접 분석</strong>하여 영업일 기준 <strong>48시간 이내</strong>에 [2026-2027 최적 지원사업 3선 및 가점 보완 리포트]를 회신드립니다.
+    </div>
+  </div>
+
+  <div class="footer-note">
+    주식회사 컨버전시 (CONVERGENCY) | 기술자산 평가팀<br>
+    본 진단서는 정부지원사업 적합도 분석용으로만 활용되며 비밀이 엄격히 보장됩니다.
+  </div>
+</div>
+
+<script>
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwHKnL5CKX2BoRIj0JIHi2dROukd03LEbqRHNDK9mYAXCxboI4HW5PKrZfJh9L_7nn9eA/exec";
+
+  function selectTrl(card) {
+    document.querySelectorAll('input[name="trl"]').forEach(input => {
+      input.closest('.choice-card').classList.remove('selected');
+    });
+    card.classList.add('selected');
+    const radio = card.querySelector('input[type="radio"]');
+    if (radio) radio.checked = true;
+  }
+
+  function togglePerk(card) {
+    setTimeout(() => {
+      const checkbox = card.querySelector('input[type="checkbox"]');
+      if (checkbox.checked) {
+        card.classList.add('selected');
+      } else {
+        card.classList.remove('selected');
+      }
+    }, 10);
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 진단 데이터 암호화 전송 중...';
+    btn.disabled = true;
+
+    const perksChecked = Array.from(document.querySelectorAll('input[name="perks"]:checked')).map(el => el.value);
+    const trlChecked = document.querySelector('input[name="trl"]:checked');
+
+    const payload = {
+      companyName: document.getElementById('companyName').value.trim(),
+      bizNo: document.getElementById('bizNo').value.trim(),
+      estDate: document.getElementById('estDate').value.trim(),
+      contactName: document.getElementById('contactName').value.trim(),
+      contactPhone: document.getElementById('contactPhone').value.trim(),
+      contactEmail: document.getElementById('contactEmail').value.trim(),
+      trl: trlChecked ? trlChecked.value : '',
+      techSummary: document.getElementById('techSummary').value.trim(),
+      patentInfo: document.getElementById('patentInfo').value.trim(),
+      kpiTarget: document.getElementById('kpiTarget').value.trim(),
+      kolasCheck: document.getElementById('kolasCheck').value,
+      perks: perksChecked
+    };
+
+    try {
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      document.getElementById('auditForm').style.display = 'none';
+      document.getElementById('receptionBox').style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (error) {
+      alert('접수 처리 중 통신 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.');
+      btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> 48시간 무상 Pre-Audit 진단 접수하기';
+      btn.disabled = false;
+    }
+  }
+</script>
+
+</body>
+</html>
