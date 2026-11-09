@@ -63,7 +63,6 @@
       -webkit-text-size-adjust: 100%;
     }
 
-    /* 실시간 진행률 상단 고정 바 */
     .sticky-progress-wrap {
       position: sticky;
       top: 0.6rem;
@@ -128,7 +127,6 @@
       transition: width 0.35s ease;
     }
 
-    /* 메인 컨테이너 */
     .container {
       max-width: 840px;
       width: 100%;
@@ -311,7 +309,7 @@
       border: 1.5px solid var(--dropdown-border);
       border-radius: var(--radius-sm);
       padding: 0.75rem 0.95rem;
-      font-size: 16px; /* iOS 자동 확대(Zoom-in) 방지 */
+      font-size: 16px;
       color: var(--text-main);
       outline: none;
       transition: var(--transition);
@@ -331,7 +329,6 @@
       line-height: 1.6;
     }
 
-    /* 커스텀 드롭다운 */
     .custom-select-wrapper {
       position: relative;
       user-select: none;
@@ -435,7 +432,6 @@
       font-weight: 700;
     }
 
-    /* 마이크로 칩 */
     .mini-chips {
       display: flex;
       flex-wrap: wrap;
@@ -500,7 +496,6 @@
       animation: fadeIn 0.2s ease;
     }
 
-    /* 가점 버튼 */
     .perks-none-btn {
       display: flex;
       align-items: center;
@@ -563,7 +558,6 @@
       animation: fadeIn 0.2s ease;
     }
 
-    /* 파일 업로드 */
     .file-upload-box {
       border: 2px dashed var(--sky-border);
       background: #f0f9ff;
@@ -611,7 +605,6 @@
       border-radius: var(--radius-sm);
     }
 
-    /* 제출 영역 */
     .submit-area {
       margin-top: 2.2rem;
       padding-top: 1.6rem;
@@ -701,7 +694,6 @@
     @keyframes spin { to { transform: rotate(360deg); } }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* 모바일 반응형 (< 640px) */
     @media (max-width: 640px) {
       body {
         padding: 0.6rem 0.5rem 3.5rem 0.5rem;
@@ -815,7 +807,6 @@
 </head>
 <body>
 
-  <!-- 실시간 상단 고정 진행률 트래커 -->
   <div class="sticky-progress-wrap">
     <div class="progress-one-line">
       <div class="progress-title-nowrap">
@@ -839,7 +830,6 @@
 
     <form id="techAuditForm">
 
-      <!-- 1. 기업 및 담당자 기본 제원 -->
       <div class="sec-row">
         <div class="sec-badge">1</div>
         <div class="sec-title">기업 및 담당자 기본 제원</div>
@@ -913,7 +903,6 @@
         </div>
       </div>
 
-      <!-- 2. 기술성숙도 및 개발 목표 형태 -->
       <div class="sec-row">
         <div class="sec-badge">2</div>
         <div class="sec-title">기술성숙도(TRL) 및 개발 목표 형태</div>
@@ -1013,7 +1002,6 @@
         </div>
       </div>
 
-      <!-- Q5: 핵심 기술 개요 및 3대 작성 가이드 -->
       <div class="q-item" data-q="5">
         <div class="q-head">
           <div class="q-title-row">
@@ -1025,7 +1013,7 @@
         </div>
 
         <div class="guide-callout">
-          <b>💡 정밀 분석을 위한 3대 핵심 작성 기준</b> (비기술/컨설팅 기업은 현재 업무 노하우를 적어주셔도 됩니다):
+          <b>💡 정밀 분석을 위한 3대 핵심 작성 기준</b>:
           <ul class="guide-list">
             <li><b>1. 해결 과제:</b> 기존 시장/고객이 겪는 한계점 및 수작업의 불편함</li>
             <li><b>2. 기술 메커니즘:</b> 귀사가 개발 또는 자동화할 핵심 알고리즘/프로세스/기능</li>
@@ -1039,7 +1027,6 @@
 3. 혁신 성능: 실시간 위험 탐지 정확도 98% 이상 달성 및 사고 대응 지연시간 50% 단축." class="track-input"></textarea>
       </div>
 
-      <!-- 3. 차별점, 시장 수요처 및 공인인증 -->
       <div class="sec-row">
         <div class="sec-badge">3</div>
         <div class="sec-title">개발 동기, 타깃 수요처 및 실증·공인인증</div>
@@ -1172,7 +1159,6 @@
         </div>
       </div>
 
-      <!-- 4. 희망 지원규모 및 보유 가점 -->
       <div class="sec-row">
         <div class="sec-badge">4</div>
         <div class="sec-title">희망 정부지원금 규모 및 보유 가점</div>
@@ -1185,7 +1171,7 @@
             <span>희망 정부지원금(출연금) 규모와 전담 연구인력은 어느 정도인가요?</span>
             <span class="req">*</span>
           </div>
-          <div class="q-sub">기업 규모에 적합한 최적 트랙(바우처 1억 vs 디딤돌 1.5억 vs 중기부 혁신형)을 선별합니다.</div>
+          <div class="q-sub">기업 규모에 적합한 최적 트랙을 선별합니다.</div>
         </div>
 
         <div class="grid-2col">
@@ -1309,7 +1295,6 @@
         </div>
       </div>
 
-      <!-- 5. 회사소개서 / IR 자료 멀티 첨부 영역 -->
       <div class="sec-row">
         <div class="sec-badge">5</div>
         <div class="sec-title">기업 소개자료 / IR 덱 첨부 (선택)</div>
@@ -1332,7 +1317,6 @@
         </div>
       </div>
 
-      <!-- 제출 영역 -->
       <div class="submit-area">
         <button type="submit" class="btn-submit" id="submitBtn">
           <span id="btnText">AI 종합 기술진단 및 핀포인트 과제 매칭 요청</span>
@@ -1345,9 +1329,6 @@
   </div>
 
   <script>
-    // ----------------------------------------------------
-    // 커스텀 드롭다운 핸들러
-    // ----------------------------------------------------
     document.querySelectorAll('.custom-select-wrapper').forEach(wrapper => {
       const trigger = wrapper.querySelector('.custom-select-trigger');
       const panel = wrapper.querySelector('.custom-options-panel');
@@ -1395,9 +1376,6 @@
       document.querySelectorAll('.custom-select-trigger').forEach(t => t.classList.remove('active'));
     });
 
-    // ----------------------------------------------------
-    // 실시간 작성 진행률 계산기
-    // ----------------------------------------------------
     function calculateProgress() {
       let answered = 0;
       const totalQuestions = 10;
@@ -1447,9 +1425,6 @@
       el.addEventListener('change', calculateProgress);
     });
 
-    // ----------------------------------------------------
-    // 마이크로 칩 인터랙션
-    // ----------------------------------------------------
     document.querySelectorAll('.mini-chips').forEach(container => {
       const chips = container.querySelectorAll('.mini-chip');
 
@@ -1487,9 +1462,6 @@
       }
     }
 
-    // ----------------------------------------------------
-    // 가점 없음 및 추가 가점 토글
-    // ----------------------------------------------------
     const perksNoneBtn = document.getElementById('perksNoneBtn');
     const perksNoneInput = document.getElementById('perksNoneInput');
     const perksToggleBtn = document.getElementById('perksToggleBtn');
@@ -1530,9 +1502,6 @@
       perksToggleText.textContent = isPerksOpen ? '▲ 추가 특화 가점 항목 8개 접기' : '▼ 추가 특화 가점 항목 8개 더보기';
     });
 
-    // ----------------------------------------------------
-    // 파일 첨부 표시 처리 및 Base64 인코더
-    // ----------------------------------------------------
     const fileInput = document.getElementById('companyFile');
     const fileChosenIndicator = document.getElementById('fileChosenIndicator');
     fileInput.addEventListener('change', () => {
@@ -1557,15 +1526,13 @@
       });
     }
 
-    // ----------------------------------------------------
-    // 폼 제출 (무한 로딩 차단: Fire-and-Forget 비동기 발송)
-    // ----------------------------------------------------
     const form = document.getElementById('techAuditForm');
     const submitBtn = document.getElementById('submitBtn');
     const btnText = document.getElementById('btnText');
     const spinner = document.getElementById('spinner');
     const statusMsg = document.getElementById('statusMsg');
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwHKnL5CKX2BoRIj0JIHi2dROukd03LEbqRHNDK9mYAXCxboI4HW5PKrZfJh9L_7nn9eA/exec";
+    
+    const MAKE_WEBHOOK_URL = "https://hook.eu2.make.com/0k0hodm1rqbhixq0fn419x3msl596dnw";
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -1588,14 +1555,12 @@
         finalKolas = form.kolasCustom.value || "기타 자체 시험평가";
       }
 
-      // 1. UI 즉각 피드백 가동
       submitBtn.disabled = true;
       btnText.textContent = "공공 R&D 심사기준 팩트체크 및 AI 분석 보고서 생성 중...";
       spinner.style.display = "inline-block";
       statusMsg.className = "status-msg loading";
       statusMsg.innerHTML = "데이터를 전송중입니다. 잠시만 기다려주세요.";
 
-      // 2. 파일 Base64 변환
       let fileData = null;
       let fileName = null;
       let fileType = null;
@@ -1636,7 +1601,6 @@
         fileType: fileType
       };
 
-      // 3. 브라우저 대기 해제 및 완료 화면 전환 함수
       const finishSubmission = () => {
         statusMsg.className = "status-msg success";
         statusMsg.innerHTML = "🎉 <b>접수 완료!</b> AI 기술자산화 핀포인트 진단 리포트가 관리자 메일로 정상 전송되었습니다.";
@@ -1651,15 +1615,13 @@
         spinner.style.display = "none";
       };
 
-      // 4. 무한 로딩 원천 차단: Fire-and-Forget 전송 (await 제거)
-      fetch(SCRIPT_URL, {
+      fetch(MAKE_WEBHOOK_URL, {
         method: "POST",
         mode: "no-cors",
-        headers: { "Content-Type": "text/plain" },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
       }).catch(err => console.warn(err));
 
-      // 서버 응답을 하염없이 기다리지 않고 2초 뒤 즉시 화면 완료 처리
       setTimeout(finishSubmission, 2000);
     });
 
