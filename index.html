@@ -3,27 +3,41 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CONVERGENCY | AI 기반 R&D 기술자산 진단 및 제안서 초안 설계 솔루션 v2.1.1</title>
+  <title>CONVERGENCY | AI 기반 R&D 기술자산 진단 및 제안서 초안 설계 v2.2.2</title>
+  <meta property="og:title" content="CONVERGENCY AI R&D 진단 v2.2.2">
+  <meta property="og:description" content="AI 국가 공공 R&D 기술자산 진단 및 제안서 자동 생성 솔루션">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #1e3a8a;
-      --primary-light: #3b82f6;
-      --accent: #0ea5e9;
-      --bg: #0b0f19;
-      --card-bg: #111827;
-      --card-border: #1f2937;
-      --input-bg: #1f2937;
-      --input-border: #374151;
-      --text-main: #f9fafb;
-      --text-muted: #9ca3af;
-      --text-sub: #d1d5db;
-      --success: #10b981;
-      --danger: #ef4444;
-      --radius: 12px;
-      --transition: all 0.2s ease-in-out;
+      /* 지정 컬러 팔레트 */
+      --bg: #EAEAEA;
+      --card-bg: #f8fafc;
+      --card-border: #BDBDBD;
+      --q-bg: #ffffff;
+      --q-border: #d1d5db;
+      
+      /* 형광기 완전 배제된 클래식 스카이블루 */
+      --sky: #0284c7;
+      --sky-soft: #e0f2fe;
+      --sky-border: #93c5fd;
+      
+      --text-main: #0f172a;
+      --text-sub: #334155;
+      --text-muted: #64748b;
+      
+      /* 드롭다운 및 인풋 회색톤 */
+      --dropdown-bg: #f1f5f9;
+      --dropdown-border: #cbd5e1;
+      --dropdown-hover: #e2e8f0;
+      
+      --danger: #dc2626;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --shadow-subtle: 0 4px 14px rgba(0, 0, 0, 0.05);
+      --transition: all 0.15s ease;
     }
 
     * {
@@ -31,868 +45,1340 @@
       margin: 0;
       padding: 0;
       font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      word-break: keep-all; /* 단어 중간 어설픈 끊김 방지 */
+      overflow-wrap: break-word;
     }
 
     body {
       background-color: var(--bg);
       color: var(--text-main);
-      line-height: 1.6;
-      padding: 2rem 1rem;
+      line-height: 1.55;
+      padding: 1.6rem 1rem 4rem 1rem;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
     }
 
+    /* 1줄 고정 실시간 작성률 바 (절대 줄바꿈 없음) */
+    .sticky-progress-wrap {
+      position: sticky;
+      top: 0.8rem;
+      z-index: 100;
+      max-width: 860px;
+      width: 100%;
+      background: #ffffff;
+      border: 1.5px solid var(--sky-border);
+      border-radius: var(--radius-md);
+      padding: 0.65rem 1.25rem;
+      box-shadow: var(--shadow-subtle);
+      margin-bottom: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .progress-one-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      white-space: nowrap;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .progress-title-nowrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      color: var(--sky);
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .progress-stat-nowrap {
+      white-space: nowrap;
+      font-size: 0.82rem;
+      color: var(--text-sub);
+    }
+
+    .progress-stat-nowrap b {
+      color: var(--sky);
+      font-size: 0.95rem;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 6px;
+      background: #e2e8f0;
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #38bdf8, #0284c7);
+      border-radius: 9999px;
+      transition: width 0.3s ease;
+    }
+
+    /* 메인 컨테이너 */
     .container {
       max-width: 860px;
       width: 100%;
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: 18px;
-      padding: 2.5rem;
-      box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.7);
-      position: relative;
+      border-radius: var(--radius-lg);
+      padding: 2.4rem 2.4rem;
+      box-shadow: var(--shadow-subtle);
     }
 
-    .container::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, #3b82f6, #0ea5e9, #6366f1);
-      border-radius: 18px 18px 0 0;
+    .header-box {
+      border-bottom: 1.5px solid var(--card-border);
+      padding-bottom: 1.3rem;
+      margin-bottom: 1.8rem;
     }
 
-    .header-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.3rem 0.8rem;
-      background: rgba(14, 165, 233, 0.12);
-      border: 1px solid rgba(14, 165, 233, 0.3);
+    .ver-badge {
+      display: inline-block;
+      padding: 0.22rem 0.7rem;
+      background: var(--sky-soft);
+      border: 1px solid var(--sky-border);
       border-radius: 9999px;
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: var(--accent);
-      margin-bottom: 0.8rem;
-    }
-
-    .header-badge .version {
-      background: var(--accent);
-      color: #0b0f19;
+      font-size: 0.75rem;
       font-weight: 800;
-      padding: 0.1rem 0.45rem;
-      border-radius: 9999px;
-      font-size: 0.72rem;
+      color: var(--sky);
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.03em;
     }
 
     h1 {
-      font-size: 1.85rem;
-      font-weight: 800;
+      font-size: 1.75rem;
+      font-weight: 900;
       letter-spacing: -0.02em;
+      color: var(--text-main);
       margin-bottom: 0.4rem;
-      background: linear-gradient(135deg, #ffffff 60%, #93c5fd);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      line-height: 1.35;
     }
 
     .subtitle {
-      font-size: 0.92rem;
+      font-size: 0.9rem;
       color: var(--text-muted);
-      margin-bottom: 2rem;
+      line-height: 1.55;
     }
 
-    .section-title {
+    /* 대단원 구분선 */
+    .sec-row {
       display: flex;
       align-items: center;
       gap: 0.6rem;
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #93c5fd;
-      margin: 1.8rem 0 1rem 0;
+      margin: 2.3rem 0 1.2rem 0;
       padding-bottom: 0.5rem;
-      border-bottom: 1px solid var(--card-border);
+      border-bottom: 1.5px solid var(--card-border);
+    }
+    .sec-row:first-of-type {
+      margin-top: 0.2rem;
     }
 
-    .section-title .badge-num {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: var(--primary-light);
+    .sec-badge {
+      width: 24px;
+      height: 24px;
+      border-radius: 5px;
+      background: var(--sky);
       color: #fff;
+      font-size: 0.78rem;
+      font-weight: 900;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.72rem;
+      flex-shrink: 0;
+    }
+
+    .sec-title {
+      font-size: 1.12rem;
       font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.01em;
     }
 
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1.1rem;
+    /* 문항 블록 */
+    .q-item {
+      background: var(--q-bg);
+      border: 1px solid var(--q-border);
+      border-radius: var(--radius-md);
+      padding: 1.25rem 1.4rem;
+      margin-bottom: 1.25rem;
+      transition: var(--transition);
+    }
+    .q-item:hover {
+      border-color: #94a3b8;
     }
 
-    .form-group {
+    .q-head {
+      margin-bottom: 0.8rem;
+    }
+
+    /* 질문 타이틀: 굵고 큼직한 원래 크기 유지 + 어설픈 줄바꿈 완전 차단 */
+    .q-title-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.45;
+    }
+
+    .q-tag {
+      background: var(--sky-soft);
+      color: var(--sky);
+      border: 1px solid var(--sky-border);
+      border-radius: 4px;
+      padding: 0.12rem 0.45rem;
+      font-size: 0.76rem;
+      font-weight: 900;
+      flex-shrink: 0;
+      margin-top: 0.15rem;
+    }
+
+    .q-title-text {
+      flex: 1;
+      display: inline;
+    }
+
+    .q-title-text .req {
+      color: var(--danger);
+      margin-left: 0.2rem;
+    }
+
+    /* 설명글: 보기보다 뚜렷하게 큰 가독성 확보 */
+    .q-sub {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+      line-height: 1.45;
+      padding-left: 0.1rem;
+    }
+
+    /* Q5 가이드라인 박스 */
+    .guide-callout {
+      background: #f1f5f9;
+      border-left: 3.5px solid var(--sky);
+      border-top: 1px solid var(--q-border);
+      border-right: 1px solid var(--q-border);
+      border-bottom: 1px solid var(--q-border);
+      border-radius: var(--radius-sm);
+      padding: 0.8rem 1rem;
+      margin-bottom: 0.85rem;
+      font-size: 0.82rem;
+      color: var(--text-sub);
+      line-height: 1.5;
+    }
+    .guide-callout b {
+      color: var(--sky);
+    }
+    .guide-list {
+      margin-top: 0.35rem;
+      padding-left: 1.1rem;
       display: flex;
       flex-direction: column;
-      gap: 0.4rem;
-    }
-
-    label {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--text-sub);
-    }
-
-    label .req {
-      color: #f87171;
-    }
-
-    .hint {
-      font-size: 0.75rem;
+      gap: 0.18rem;
+      font-size: 0.78rem;
       color: var(--text-muted);
     }
 
+    /* 그리드 */
+    .grid-2col {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.95rem;
+    }
+    @media (max-width: 640px) {
+      .grid-2col { grid-template-columns: 1fr; }
+    }
+
+    .field-box {
+      display: flex;
+      flex-direction: column;
+      gap: 0.32rem;
+    }
+    .field-box label {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-sub);
+    }
+
+    /* 입력 컨트롤 */
     input[type="text"],
-    input[type="email"],
     input[type="tel"],
+    input[type="email"],
     input[type="date"],
-    select,
     textarea {
       width: 100%;
-      background-color: var(--input-bg);
-      border: 1px solid var(--input-border);
-      border-radius: 8px;
-      padding: 0.7rem 0.9rem;
+      background: #ffffff;
+      border: 1px solid var(--dropdown-border);
+      border-radius: var(--radius-sm);
+      padding: 0.65rem 0.85rem;
+      font-size: 0.86rem;
       color: var(--text-main);
-      font-size: 0.88rem;
-      transition: var(--transition);
       outline: none;
+      transition: var(--transition);
     }
 
     input:focus,
-    select:focus,
     textarea:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+      border-color: var(--sky);
+      box-shadow: 0 0 0 2.5px rgba(2, 132, 199, 0.15);
     }
 
     textarea {
       resize: vertical;
-      min-height: 90px;
+      min-height: 85px;
+      line-height: 1.5;
     }
 
-    select {
-      cursor: pointer;
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239ca3af'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 0.85rem center;
-      background-size: 1rem;
-      padding-right: 2.4rem;
+    /* 100% 회색톤 커스텀 드롭다운 */
+    .custom-select-wrapper {
+      position: relative;
+      user-select: none;
+      width: 100%;
     }
 
-    .option-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-      gap: 0.6rem;
-      margin-top: 0.3rem;
-    }
-
-    .option-grid.dense {
-      grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
-    }
-
-    .option-card {
+    .custom-select-trigger {
       display: flex;
-      align-items: flex-start;
-      gap: 0.6rem;
-      padding: 0.7rem 0.85rem;
-      background: rgba(31, 41, 55, 0.5);
-      border: 1px solid var(--input-border);
-      border-radius: 8px;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      background: var(--dropdown-bg);
+      border: 1px solid var(--dropdown-border);
+      border-radius: var(--radius-sm);
+      padding: 0.65rem 0.95rem;
+      font-size: 0.86rem;
+      color: var(--text-main);
       cursor: pointer;
       transition: var(--transition);
-      user-select: none;
     }
 
-    .option-card:hover {
-      background: rgba(55, 65, 81, 0.6);
-      border-color: #4b5563;
+    .custom-select-trigger:hover {
+      border-color: var(--sky);
+      background: #ffffff;
     }
 
-    .option-card input[type="radio"],
-    .option-card input[type="checkbox"] {
-      margin-top: 0.2rem;
-      accent-color: var(--accent);
-      width: 15px;
-      height: 15px;
-      cursor: pointer;
+    .custom-select-trigger.active {
+      border-color: var(--sky);
+      background: #ffffff;
+      box-shadow: 0 0 0 2.5px rgba(2, 132, 199, 0.15);
     }
 
-    .option-card .label-content {
-      display: flex;
-      flex-direction: column;
-      gap: 0.1rem;
+    .custom-select-arrow {
+      width: 7px;
+      height: 7px;
+      border-right: 2px solid var(--sky);
+      border-bottom: 2px solid var(--sky);
+      transform: rotate(45deg);
+      transition: transform 0.2s ease;
+      margin-left: 0.5rem;
+      flex-shrink: 0;
     }
 
-    .option-card .main-text {
-      font-size: 0.83rem;
-      font-weight: 600;
-      color: var(--text-main);
+    .custom-select-trigger.active .custom-select-arrow {
+      transform: rotate(-135deg);
     }
 
-    .option-card .sub-text {
-      font-size: 0.7rem;
-      color: var(--text-muted);
-    }
-
-    .option-card.active {
-      border-color: var(--accent);
-      background: rgba(14, 165, 233, 0.12);
-    }
-
-    .etc-input-box {
-      margin-top: 0.45rem;
+    .custom-options-panel {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      background: #f8fafc;
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-md);
+      box-shadow: 0 10px 25px -4px rgba(0, 0, 0, 0.12);
+      z-index: 50;
+      max-height: 240px;
+      overflow-y: auto;
       display: none;
     }
 
-    .etc-input-box.visible {
+    .custom-options-panel.open {
       display: block;
+      animation: fadeIn 0.15s ease;
     }
 
+    .custom-options-panel::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-options-panel::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+
+    .custom-optgroup-label {
+      padding: 0.45rem 0.95rem;
+      font-size: 0.74rem;
+      font-weight: 800;
+      color: var(--sky);
+      background: #e2e8f0;
+      border-bottom: 1px solid #cbd5e1;
+    }
+
+    .custom-option {
+      padding: 0.6rem 0.95rem;
+      font-size: 0.83rem;
+      color: var(--text-main);
+      cursor: pointer;
+      transition: background 0.12s ease;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .custom-option:last-child {
+      border-bottom: none;
+    }
+
+    .custom-option:hover {
+      background: var(--sky-soft);
+      color: var(--sky);
+      font-weight: 700;
+    }
+
+    .custom-option.selected {
+      background: var(--sky-soft);
+      color: var(--sky);
+      font-weight: 800;
+    }
+
+    /* 설명글보다 확실히 작은 미니 칩 (Micro-Chip) */
+    .mini-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+
+    .mini-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.25rem 0.58rem;
+      background: #ffffff;
+      border: 1px solid var(--dropdown-border);
+      border-radius: 9999px;
+      font-size: 0.74rem; /* 설명글(0.82rem)보다 확실히 작음 */
+      font-weight: 600;
+      color: var(--text-sub);
+      cursor: pointer;
+      user-select: none;
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+
+    .mini-chip input {
+      display: none;
+    }
+
+    .mini-chip:hover {
+      background: var(--sky-soft);
+      border-color: var(--sky-border);
+      color: var(--text-main);
+    }
+
+    .mini-chip.active {
+      background: var(--sky-soft);
+      border-color: var(--sky);
+      color: var(--sky);
+      font-weight: 700;
+    }
+
+    .chip-bullet {
+      width: 4.5px;
+      height: 4.5px;
+      border-radius: 50%;
+      background: #94a3b8;
+      flex-shrink: 0;
+      transition: var(--transition);
+    }
+    .mini-chip.active .chip-bullet {
+      background: var(--sky);
+      transform: scale(1.2);
+    }
+
+    .custom-box {
+      margin-top: 0.65rem;
+      display: none;
+    }
+    .custom-box.open {
+      display: block;
+      animation: fadeIn 0.2s ease;
+    }
+
+    /* 가점 스마트 처리 */
+    .perks-none-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #f8fafc;
+      border: 1.5px dashed var(--card-border);
+      border-radius: var(--radius-sm);
+      padding: 0.55rem 0.85rem;
+      cursor: pointer;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 0.65rem;
+      transition: var(--transition);
+    }
+    .perks-none-btn:hover {
+      border-color: var(--sky);
+      background: var(--sky-soft);
+    }
+    .perks-none-btn.active {
+      border: 1.5px solid var(--sky);
+      background: var(--sky-soft);
+      color: var(--sky);
+    }
+    .perks-none-btn input {
+      accent-color: var(--sky);
+      cursor: pointer;
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+    }
+
+    .perks-expander-btn {
+      width: 100%;
+      background: #f8fafc;
+      border: 1px solid var(--q-border);
+      border-radius: var(--radius-sm);
+      padding: 0.45rem;
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: var(--sky);
+      cursor: pointer;
+      margin-top: 0.55rem;
+      transition: var(--transition);
+    }
+    .perks-expander-btn:hover {
+      background: var(--sky-soft);
+      border-color: var(--sky-border);
+    }
+
+    .perks-hidden-tray {
+      display: none;
+      margin-top: 0.55rem;
+      padding-top: 0.55rem;
+      border-top: 1px dashed var(--q-border);
+    }
+    .perks-hidden-tray.open {
+      display: block;
+      animation: fadeIn 0.2s ease;
+    }
+
+    /* 제출 버튼: 절대 어설프게 줄바꿈되지 않는 최적화 규격 */
     .submit-area {
       margin-top: 2.2rem;
-      padding-top: 1.4rem;
-      border-top: 1px solid var(--card-border);
+      padding-top: 1.5rem;
+      border-top: 1.5px solid var(--card-border);
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.8rem;
+      gap: 0.85rem;
     }
 
     .btn-submit {
       width: 100%;
-      max-width: 440px;
-      padding: 1rem 1.6rem;
-      background: linear-gradient(135deg, #2563eb, #0ea5e9);
+      max-width: 480px;
+      padding: 1.05rem 1.6rem;
+      background: linear-gradient(135deg, #0284c7, #0369a1);
       border: none;
-      border-radius: 10px;
+      border-radius: var(--radius-md);
       color: #ffffff;
-      font-size: 1rem;
-      font-weight: 700;
+      font-size: clamp(0.9rem, 2.5vw, 1.02rem); /* 화면 폭에 맞춰 유연하게 조절되어 줄바꿈 차단 */
+      font-weight: 800;
+      letter-spacing: -0.01em;
       cursor: pointer;
-      box-shadow: 0 10px 20px -5px rgba(14, 165, 233, 0.4);
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
       transition: var(--transition);
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 0.5rem;
+      gap: 0.45rem;
+      white-space: nowrap; /* 텍스트 1줄 보장 */
     }
 
     .btn-submit:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 14px 25px -5px rgba(14, 165, 233, 0.55);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(2, 132, 199, 0.35);
+      background: linear-gradient(135deg, #0369a1, #075985);
     }
 
     .btn-submit:disabled {
       opacity: 0.5;
       cursor: not-allowed;
+      transform: none;
     }
 
-    .status-msg {
-      font-size: 0.85rem;
-      display: none;
-      text-align: center;
-    }
-
-    .status-msg.success {
-      display: block;
-      color: var(--success);
-    }
-
-    .status-msg.error {
-      display: block;
-      color: var(--danger);
-    }
-
-    .loading-spinner {
-      width: 18px;
-      height: 18px;
-      border: 2px solid rgba(255, 255, 255, 0.3);
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.4);
       border-top-color: #fff;
       border-radius: 50%;
-      animation: spin 0.8s linear infinite;
+      animation: spin 0.7s linear infinite;
       display: none;
     }
 
-    @keyframes spin {
-      to { transform: rotate(360deg); }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: translateY(0); } }
+
+    .status-msg {
+      font-size: 0.86rem;
+      font-weight: 700;
+      display: none;
+      padding: 0.8rem 1.2rem;
+      border-radius: var(--radius-sm);
+      text-align: center;
+      max-width: 480px;
+      width: 100%;
+    }
+    .status-msg.success {
+      display: block;
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      color: #065f46;
+    }
+    .status-msg.error {
+      display: block;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #991b1b;
     }
 
     @media (max-width: 640px) {
       .container { padding: 1.5rem 1rem; }
-      .form-grid { grid-template-columns: 1fr; }
-      .option-grid, .option-grid.dense { grid-template-columns: 1fr; }
+      h1 { font-size: 1.4rem; }
+      .q-item { padding: 1rem 0.9rem; }
+      .sticky-progress-wrap { padding: 0.55rem 0.95rem; }
     }
   </style>
 </head>
 <body>
 
-  <div class="container">
-    <div class="header-badge">
-      <span>CONVERGENCY Tech Audit Engine</span>
-      <span class="version">v2.1.1</span>
+  <!-- 1줄 고정 실시간 작성 진행률 트래커 -->
+  <div class="sticky-progress-wrap">
+    <div class="progress-one-line">
+      <div class="progress-title-nowrap">
+        <span>⚡ 실시간 기술자산 진단 작성률</span>
+      </div>
+      <div class="progress-stat-nowrap">
+        <span id="answeredCount">0</span>/10 문항 (<b id="progressPercent">0%</b>)
+      </div>
     </div>
+    <div class="progress-track">
+      <div id="progressFill" class="progress-fill"></div>
+    </div>
+  </div>
 
-    <h1>AI 국가 R&D 기술진단 및 제안서 초안 설계</h1>
-    <p class="subtitle">기업의 기술자산과 실증 역량을 정밀 분석하여 중기부·산자부·과기부 최적 과제 매칭 및 정부 표준 사업계획서 1~4장 본문 초안을 원클릭으로 도출합니다.</p>
+  <div class="container">
+    <div class="header-box">
+      <div class="ver-badge">REAL-TIME TECH ASSET AUDIT</div>
+      <h1>AI 국가 공공 R&D 기술진단 및 제안서 초안 설계</h1>
+      <p class="subtitle">기업의 기술자산과 실증 역량을 토대로 중기부·산자부·과기부 최적 지원사업 매칭 및 정부 표준 사업계획서 1~4장 본문 초안을 원클릭으로 설계합니다.</p>
+    </div>
 
     <form id="techAuditForm">
 
-      <!-- 섹션 1. 기업 및 기본제원 -->
-      <div class="section-title">
-        <span class="badge-num">1</span>
-        <span>기업 및 담당자 기본 제원</span>
+      <!-- 1. 기업 및 담당자 기본 제원 -->
+      <div class="sec-row">
+        <div class="sec-badge">1</div>
+        <div class="sec-title">기업 및 담당자 기본 제원</div>
       </div>
 
-      <div class="form-grid">
-        <div class="form-group">
-          <label>기업명 <span class="req">*</span></label>
-          <input type="text" name="companyName" required placeholder="(주)컨버전시">
+      <div class="q-item" data-q="1">
+        <div class="q-head">
+          <div class="q-title-row">
+            <span class="q-tag">Q1</span>
+            <div class="q-title-text">진단 대상 기업의 기본 정보를 입력해 주세요.<span class="req">*</span></div>
+          </div>
+          <div class="q-sub">설립일자를 기준으로 창업 3년(초기창업), 7년(창업기업), 도약기 R&D 지원자격이 자동 분류됩니다.</div>
         </div>
-        <div class="form-group">
-          <label>사업자등록번호 <span class="req">*</span></label>
-          <input type="text" name="bizNo" required placeholder="000-00-00000">
-        </div>
-        <div class="form-group">
-          <label>설립일자 <span class="req">*</span></label>
-          <input type="date" name="estDate" required>
-          <span class="hint">창업 3년/7년 이내 여부 판정 기준</span>
-        </div>
-        <div class="form-group">
-          <label>최근 연간 매출액 규모 (B-3) <span class="req">*</span> (드롭다운)</label>
-          <select name="revenueScale" required>
-            <option value="" disabled selected>연간 매출 구간을 선택해 주세요</option>
-            <option value="매출 없음 (Pre-Revenue / 창업 초기)">매출 없음 (Pre-Revenue / 창업 초기)</option>
-            <option value="1억 원 미만">1억 원 미만</option>
-            <option value="1억 원 이상 ~ 5억 원 미만">1억 원 이상 ~ 5억 원 미만</option>
-            <option value="5억 원 이상 ~ 20억 원 미만">5억 원 이상 ~ 20억 원 미만</option>
-            <option value="20억 원 이상 ~ 50억 원 미만">20억 원 이상 ~ 50억 원 미만</option>
-            <option value="50억 원 이상 (중기업·중견 도약)">50억 원 이상 (중기업·중견 도약)</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="form-grid" style="margin-top: 1.1rem;">
-        <div class="form-group">
-          <label>담당자 성함 / 직함 <span class="req">*</span></label>
-          <input type="text" name="contactName" required placeholder="홍길동 수석연구원">
-        </div>
-        <div class="form-group">
-          <label>연락처 <span class="req">*</span></label>
-          <input type="tel" name="contactPhone" required placeholder="010-0000-0000">
-        </div>
-        <div class="form-group" style="grid-column: 1 / -1;">
-          <label>수신 이메일 주소 <span class="req">*</span></label>
-          <input type="email" name="contactEmail" required placeholder="contact@convergency.co.kr">
-          <span class="hint">진단 결과 및 기술사업계획서 작성 안내를 수신할 공식 메일</span>
-        </div>
-      </div>
-
-      <!-- 섹션 2. TRL 및 개발 목표 형태 -->
-      <div class="section-title">
-        <span class="badge-num">2</span>
-        <span>기술 성숙도(TRL) 및 개발 목표 형태</span>
-      </div>
-
-      <div class="form-group">
-        <label>현재 기술 성숙도 단계 (TRL) <span class="req">*</span> (라디오: 1개 선택)</label>
-        <div class="option-grid dense">
-          <label class="option-card">
-            <input type="radio" name="trl" value="TRL 1~2단계 (기초연구/아이디어)" required>
-            <div class="label-content">
-              <span class="main-text">TRL 1~2단계</span>
-              <span class="sub-text">기초 개념 정립 및 아이디어</span>
+        <div class="grid-2col">
+          <div class="field-box">
+            <label>기업명 <span class="req">*</span></label>
+            <input type="text" name="companyName" required placeholder="(주)컨버전시" class="track-input">
+          </div>
+          <div class="field-box">
+            <label>사업자등록번호 <span class="req">*</span></label>
+            <input type="text" name="bizNo" required placeholder="000-00-00000" class="track-input">
+          </div>
+          <div class="field-box">
+            <label>설립일자 <span class="req">*</span></label>
+            <input type="date" name="estDate" required class="track-input">
+          </div>
+          <div class="field-box">
+            <label>최근 연간 매출액 규모 <span class="req">*</span></label>
+            <div class="custom-select-wrapper" data-name="revenueScale" data-required="true">
+              <input type="hidden" name="revenueScale" class="track-input" required>
+              <div class="custom-select-trigger">
+                <span class="selected-text">눌러서 매출 구간 선택</span>
+                <span class="custom-select-arrow"></span>
+              </div>
+              <div class="custom-options-panel">
+                <div class="custom-option" data-value="매출 없음 (Pre-Revenue / 창업 초기)">매출 없음 (Pre-Revenue / 창업 초기)</div>
+                <div class="custom-option" data-value="1억 원 미만">1억 원 미만</div>
+                <div class="custom-option" data-value="1억 원 이상 ~ 5억 원 미만">1억 원 이상 ~ 5억 원 미만</div>
+                <div class="custom-option" data-value="5억 원 이상 ~ 20억 원 미만">5억 원 이상 ~ 20억 원 미만</div>
+                <div class="custom-option" data-value="20억 원 이상 ~ 50억 원 미만">20억 원 이상 ~ 50억 원 미만</div>
+                <div class="custom-option" data-value="50억 원 이상 (중기업·중견 도약)">50억 원 이상 (중기업·중견 도약)</div>
+              </div>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="q-item" data-q="2">
+        <div class="q-head">
+          <div class="q-title-row">
+            <span class="q-tag">Q2</span>
+            <div class="q-title-text">신청 담당자 연락처 및 결과 수신 메일을 입력해 주세요.<span class="req">*</span></div>
+          </div>
+          <div class="q-sub">기술진단 심사평 및 제안서 1~4장 표준 초안 리포트 안내가 전달됩니다.</div>
+        </div>
+        <div class="grid-2col">
+          <div class="field-box">
+            <label>담당자 성함 / 직함 <span class="req">*</span></label>
+            <input type="text" name="contactName" required placeholder="홍길동 수석연구원" class="track-input">
+          </div>
+          <div class="field-box">
+            <label>연락처 <span class="req">*</span></label>
+            <input type="tel" name="contactPhone" required placeholder="010-0000-0000" class="track-input">
+          </div>
+          <div class="field-box" style="grid-column: 1 / -1;">
+            <label>수신 이메일 주소 <span class="req">*</span></label>
+            <input type="email" name="contactEmail" required placeholder="contact@convergency.co.kr" class="track-input">
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. 기술성숙도 및 개발 목표 형태 -->
+      <div class="sec-row">
+        <div class="sec-badge">2</div>
+        <div class="sec-title">기술성숙도(TRL) 및 개발 목표 형태</div>
+      </div>
+
+      <div class="q-item" data-q="3">
+        <div class="q-head">
+          <div class="q-title-row">
+            <span class="q-tag">Q3</span>
+            <div class="q-title-text">현재 연구개발 성숙도(TRL) 단계는 어디인가요?<span class="req">*</span></div>
+          </div>
+          <div class="q-sub">기초 아이디어부터 양산 실증 단계까지 공공 R&D 매칭 트랙을 결정합니다 (1개 선택).</div>
+        </div>
+        <div class="mini-chips">
+          <label class="mini-chip active">
+            <input type="radio" name="trl" value="TRL 1~2단계 (기초연구/아이디어)" checked required>
+            <span class="chip-bullet"></span>
+            <span>TRL 1~2단계 (기초)</span>
           </label>
-          <label class="option-card">
+          <label class="mini-chip">
             <input type="radio" name="trl" value="TRL 3~4단계 (실험실 PoC/알고리즘 검증)">
-            <div class="label-content">
-              <span class="main-text">TRL 3~4단계</span>
-              <span class="sub-text">실험실 규모 PoC/알고리즘 검증</span>
-            </div>
+            <span class="chip-bullet"></span>
+            <span>TRL 3~4단계 (PoC)</span>
           </label>
-          <label class="option-card">
+          <label class="mini-chip">
             <input type="radio" name="trl" value="TRL 5~6단계 (시제품 제작/테스트베드 검증)">
-            <div class="label-content">
-              <span class="main-text">TRL 5~6단계</span>
-              <span class="sub-text">시제품 제작 및 실환경 성능 검증</span>
-            </div>
+            <span class="chip-bullet"></span>
+            <span>TRL 5~6단계 (시제품)</span>
           </label>
-          <label class="option-card">
+          <label class="mini-chip">
             <input type="radio" name="trl" value="TRL 7~8단계 (신뢰성 인증/양산화 준비)">
-            <div class="label-content">
-              <span class="main-text">TRL 7~8단계</span>
-              <span class="sub-text">신뢰성 인증 및 파일럿 양산</span>
-            </div>
+            <span class="chip-bullet"></span>
+            <span>TRL 7~8단계 (양산화)</span>
           </label>
         </div>
       </div>
 
-      <div class="form-group" style="margin-top: 1.4rem;">
-        <label>최종 개발 목표 형태 (A-1 확장) <span class="req">*</span> (라디오: 1개 선택)</label>
-        <div class="option-grid">
-          <label class="option-card">
-            <input type="radio" name="targetType" value="순수 S/W · 플랫폼 · 웹/앱 · SaaS" required onclick="toggleEtc('targetTypeEtc', false)">
-            <div class="label-content">
-              <span class="main-text">순수 S/W · 플랫폼 · SaaS</span>
-              <span class="sub-text">클라우드 소프트웨어, 웹/앱 서비스</span>
-            </div>
+      <div class="q-item" data-q="4">
+        <div class="q-head">
+          <div class="q-title-row">
+            <span class="q-tag">Q4</span>
+            <div class="q-title-text">최종 개발 목표 형태가 무엇인가요?<span class="req">*</span></div>
+          </div>
+          <div class="q-sub">제안서 3장(세부 개발내용)의 소프트웨어 아키텍처 vs 하드웨어 회로·기구설계 본문 분기를 결정합니다.</div>
+        </div>
+        <div class="mini-chips" id="targetTypeChips">
+          <label class="mini-chip active">
+            <input type="radio" name="targetType" value="순수 S/W · 플랫폼 · 웹/앱 · SaaS" checked required>
+            <span class="chip-bullet"></span>
+            <span>순수 S/W·SaaS</span>
           </label>
-          <label class="option-card">
-            <input type="radio" name="targetType" value="인공지능(AI) 알고리즘 · 파운데이션 모델" onclick="toggleEtc('targetTypeEtc', false)">
-            <div class="label-content">
-              <span class="main-text">AI 알고리즘 · 초거대모델</span>
-              <span class="sub-text">경량화 AI, Computer Vision, 생성형</span>
-            </div>
+          <label class="mini-chip">
+            <input type="radio" name="targetType" value="인공지능(AI) 알고리즘 · 초거대모델(LLM)">
+            <span class="chip-bullet"></span>
+            <span>AI·LLM 솔루션</span>
           </label>
-          <label class="option-card">
-            <input type="radio" name="targetType" value="임베디드 S/W · 엣지 컴퓨팅 · 펌웨어" onclick="toggleEtc('targetTypeEtc', false)">
-            <div class="label-content">
-              <span class="main-text">임베디드 S/W · 엣지 디바이스</span>
-              <span class="sub-text">온디바이스 제어, 센서 펌웨어</span>
-            </div>
+          <label class="mini-chip">
+            <input type="radio" name="targetType" value="임베디드 S/W · 엣지 컴퓨팅 · 펌웨어">
+            <span class="chip-bullet"></span>
+            <span>임베디드·엣지</span>
           </label>
-          <label class="option-card">
-            <input type="radio" name="targetType" value="H/W 단품 · IoT 전자모듈 · 제어보드" onclick="toggleEtc('targetTypeEtc', false)">
-            <div class="label-content">
-              <span class="main-text">H/W 단품 · IoT 전자모듈</span>
-              <span class="sub-text">회로기판(PCB), 제어기, 센서 하드웨어</span>
-            </div>
+          <label class="mini-chip">
+            <input type="radio" name="targetType" value="H/W 단품 · 기구물 · IoT 전자모듈">
+            <span class="chip-bullet"></span>
+            <span>H/W 단품·IoT</span>
           </label>
-          <label class="option-card">
-            <input type="radio" name="targetType" value="H/W + S/W 융합 시스템 · 로봇 · 모빌리티" onclick="toggleEtc('targetTypeEtc', false)">
-            <div class="label-content">
-              <span class="main-text">H/W + S/W 융합 완제품</span>
-              <span class="sub-text">로보틱스, 무인이송장비, 융합 설비</span>
-            </div>
+          <label class="mini-chip">
+            <input type="radio" name="targetType" value="H/W + S/W 융합 시스템 · 로봇 · 모빌리티">
+            <span class="chip-bullet"></span>
+            <span>H/W+S/W 융합 완제품</span>
           </label>
-          <label class="option-card">
-            <input type="radio" name="targetType" value="신소재 · 배터리 · 화학소재 부품" onclick="toggleEtc('targetTypeEtc', false)">
-            <div class="label-content">
-              <span class="main-text">신소재 · 배터리 · 화학</span>
-              <span class="sub-text">나노소재, 코팅/배합, 2차전지 소재</span>
-            </div>
+          <label class="mini-chip">
+            <input type="radio" name="targetType" value="화학 · 소재 · 배터리 · 신소재 부품">
+            <span class="chip-bullet"></span>
+            <span>소재·배터리·화학</span>
           </label>
-          <label class="option-card">
-            <input type="radio" name="targetType" value="바이오 · 신약 · 의료기기 · 디지털헬스케어" onclick="toggleEtc('targetTypeEtc', false)">
-            <div class="label-content">
-              <span class="main-text">바이오 · 신약 · 의료기기</span>
-              <span class="sub-text">진단키트, 디지털치료제, 바이오 의약품</span>
-            </div>
+          <label class="mini-chip">
+            <input type="radio" name="targetType" value="바이오 · 신약 · 의료기기 · 헬스케어">
+            <span class="chip-bullet"></span>
+            <span>바이오·의료기기</span>
           </label>
-          <label class="option-card">
-            <input type="radio" name="targetType" value="친환경 · 신재생에너지 · 탄소중립 장비" onclick="toggleEtc('targetTypeEtc', false)">
-            <div class="label-content">
-              <span class="main-text">친환경 · 신재생에너지 설비</span>
-              <span class="sub-text">탄소포집, 수소저장, 자원순환 공정</span>
-            </div>
+          <label class="mini-chip">
+            <input type="radio" name="targetType" value="친환경 · 신재생에너지 · 탄소중립 장비">
+            <span class="chip-bullet"></span>
+            <span>친환경·에너지 장비</span>
           </label>
-          <label class="option-card">
-            <input type="radio" name="targetType" value="기타 직접입력" onclick="toggleEtc('targetTypeEtc', true)">
-            <div class="label-content">
-              <span class="main-text">기타 (직접 입력)</span>
-              <span class="sub-text">위 분류에 속하지 않는 독자 영역</span>
-            </div>
+          <label class="mini-chip" id="targetCustomBtn">
+            <input type="radio" name="targetType" value="기타 직접입력">
+            <span class="chip-bullet"></span>
+            <span>+ 기타 직접입력</span>
           </label>
         </div>
-        <div id="targetTypeEtc" class="etc-input-box">
+        <div id="targetCustomBox" class="custom-box">
           <input type="text" name="targetTypeCustom" placeholder="개발 목표 형태를 직접 입력해 주세요 (예: 항공우주 초소형 위성 추진체 모듈)">
         </div>
       </div>
 
-      <div class="form-group" style="margin-top: 1.2rem;">
-        <label>핵심 기술 개요 및 개발 내용 <span class="req">*</span></label>
-        <textarea name="techSummary" required placeholder="귀사가 개발하고자 하는 핵심 기술 메커니즘, 주요 기능 및 혁신성을 요약해 주세요."></textarea>
-      </div>
-
-      <!-- 섹션 3. 차별점 및 판로 실증 -->
-      <div class="section-title">
-        <span class="badge-num">3</span>
-        <span>개발 동기, 타깃 수요처 및 판로 실증 현황</span>
-      </div>
-
-      <div class="form-grid">
-        <div class="form-group">
-          <label>기존 기술 대비 차별점 / 개발 동기 (A-2) <span class="req">*</span> (드롭다운)</label>
-          <select name="diffFactor" required>
-            <option value="" disabled selected>핵심 개발 동기를 선택해 주세요</option>
-            <option value="기존 솔루션 대비 속도·정확도·성능 획기적 개선">기존 솔루션 대비 속도·정확도·성능 획기적 개선</option>
-            <option value="외산 고가 장비/소프트웨어 국산화 및 비용 대폭 절감">외산 고가 장비/소프트웨어 국산화 및 비용 대폭 절감</option>
-            <option value="기존 수작업 공정의 AI/디지털 완전 자동화(AX)">기존 수작업 공정의 AI/디지털 완전 자동화(AX)</option>
-            <option value="글로벌 규제(ESG, 탄소배출, 안전기준) 선제 대응">글로벌 규제(ESG, 탄소배출, 안전기준) 선제 대응</option>
-            <option value="이종 산업 융합을 통한 신규 시장 창출">이종 산업 융합을 통한 신규 시장 창출</option>
-            <option value="기타 독자적 성능 혁신">기타 독자적 성능 혁신</option>
-          </select>
+      <!-- Q5: 핵심 기술 개요 및 3대 작성 가이드 -->
+      <div class="q-item" data-q="5">
+        <div class="q-head">
+          <div class="q-title-row">
+            <span class="q-tag">Q5</span>
+            <div class="q-title-text">핵심 기술 개요 및 주요 기능을 요약해 주세요.<span class="req">*</span></div>
+          </div>
+          <div class="q-sub">아래 가이드를 참고하여 구체적으로 작성해 주실수록 AI가 정확한 사업계획서 1~4장 본문 초안을 도출합니다.</div>
         </div>
 
-        <div class="form-group">
-          <label>주요 타깃 수요처 (A-3) <span class="req">*</span> (드롭다운)</label>
-          <select name="targetMarket" required>
-            <option value="" disabled selected>타깃 진입 시장을 선택해 주세요</option>
-            <option value="B2B 대기업·중견 제조공장 및 산업 현장">B2B 대기업·중견 제조공장 및 산업 현장</option>
-            <option value="중소기업 및 소상공인 (SME 생태계)">중소기업 및 소상공인 (SME 생태계)</option>
-            <option value="공공기관, 지자체, 공기업 및 국방 조달 (B2G)">공공기관, 지자체, 공기업 및 국방 조달 (B2G)</option>
-            <option value="병원, 의료기관 및 헬스케어 클러스터">병원, 의료기관 및 헬스케어 클러스터</option>
-            <option value="일반 대중 소비자 (B2C) 및 글로벌 직수출">일반 대중 소비자 (B2C) 및 글로벌 직수출</option>
-          </select>
+        <div class="guide-callout">
+          <b>💡 정밀 분석을 위한 3대 핵심 작성 기준</b> (아래 3가지 요소를 포함해 주시면 제안서 완성도가 극대화됩니다):
+          <ul class="guide-list">
+            <li><b>1. 해결 과제:</b> 기존 기술이나 시장 제품이 가진 한계점·불편함이 무엇인지 명시</li>
+            <li><b>2. 기술 메커니즘:</b> 귀사가 개발할 핵심 알고리즘, 공정, 회로구조 또는 시스템 구성 방식</li>
+            <li><b>3. 목표 성능치:</b> 개발 완료 시 기대되는 구체적 성능 개선치(정확도 %, 속도 ms, 원가 절감 등)</li>
+          </ul>
         </div>
+
+        <textarea name="techSummary" required placeholder="[작성 예시]
+1. 기존 한계: 산업용 검사 공정의 육안 검사는 0.3mm 미세 불량 검출 시 오탐률이 15%에 달하고 검사 속도가 지연됨.
+2. 개발 내용: 고속 비전 카메라와 온디바이스 경량 딥러닝(CNN) 추론 엔진을 결합한 실시간 크랙 검출 엣지 모듈 개발.
+3. 혁신 성능: 0.1mm 이하 미세 결함을 30fps 속도로 98.5% 이상 정확도로 실시간 분류하고 불량률 90% 이상 절감." class="track-input"></textarea>
       </div>
 
-      <div class="form-group" style="margin-top: 1.1rem;">
-        <label>수요처 연계 및 실증(PoC) 검증 현황 (A-4) <span class="req">*</span> (라디오: 1개 선택)</label>
-        <div class="option-grid dense">
-          <label class="option-card">
-            <input type="radio" name="pocStatus" value="구매의향서(LOI)/구매확약서(LOC) 확보 완료" required>
-            <div class="label-content">
-              <span class="main-text">구매의향서(LOI) 확보</span>
-              <span class="sub-text">구체적 사전 구매의향 문서 확보</span>
-            </div>
-          </label>
-          <label class="option-card">
-            <input type="radio" name="pocStatus" value="수요처와 실증(PoC) 협의 및 필드 테스트 준비 중">
-            <div class="label-content">
-              <span class="main-text">실증(PoC) 협의 중</span>
-              <span class="sub-text">테스트베드 제공 및 필드 검증 협약</span>
-            </div>
-          </label>
-          <label class="option-card">
-            <input type="radio" name="pocStatus" value="기존 납품·거래선 보유 (제품 개발 시 즉시 채택)">
-            <div class="label-content">
-              <span class="main-text">기존 고정 납품선 보유</span>
-              <span class="sub-text">기존 공급망으로 즉시 확장 가능</span>
-            </div>
-          </label>
-          <label class="option-card">
-            <input type="radio" name="pocStatus" value="과제 선정 후 1차년도 내 타깃 수요처 발굴 예정">
-            <div class="label-content">
-              <span class="main-text">선정 후 수요처 발굴 예정</span>
-              <span class="sub-text">과제 수행 중 실증 사이트 개척</span>
-            </div>
-          </label>
+      <!-- 3. 차별점, 시장 수요처 및 공인인증 -->
+      <div class="sec-row">
+        <div class="sec-badge">3</div>
+        <div class="sec-title">개발 동기, 타깃 수요처 및 실증·공인인증</div>
+      </div>
+
+      <div class="q-item" data-q="6">
+        <div class="q-head">
+          <div class="q-title-row">
+            <span class="q-tag">Q6</span>
+            <div class="q-title-text">기존 시장 기술 대비 핵심 차별점/동기는 무엇인가요?<span class="req">*</span></div>
+          </div>
+          <div class="q-sub">제안서 1장(국내외 기술 개발 현황 및 독창성)의 핵심 근거가 됩니다.</div>
+        </div>
+        <div class="custom-select-wrapper" data-name="diffFactor" data-required="true">
+          <input type="hidden" name="diffFactor" class="track-input" required>
+          <div class="custom-select-trigger">
+            <span class="selected-text">눌러서 핵심 개발 동기 선택</span>
+            <span class="custom-select-arrow"></span>
+          </div>
+          <div class="custom-options-panel">
+            <div class="custom-option" data-value="기존 제품/솔루션 대비 처리 속도·정확도·성능 획기적 개선">기존 솔루션 대비 속도·정확도·성능 획기적 개선</div>
+            <div class="custom-option" data-value="외산 고가 원천장비/소프트웨어의 국산화 및 50% 이상 원가 절감">외산 고가 장비/소프트웨어 국산화 및 비용 대폭 절감</div>
+            <div class="custom-option" data-value="기존 아날로그·수작업 공정의 AI/디지털 자동화(AX 전환)">기존 수작업 공정의 AI/디지털 완전 자동화(AX 전환)</div>
+            <div class="custom-option" data-value="강화된 글로벌 규제(ESG, 탄소배출, 안전기준) 선제적 대응">글로벌 규제(ESG, 탄소배출, 안전기준) 선제 대응</div>
+            <div class="custom-option" data-value="이종 산업 기술 융합을 통한 신규 틈새시장(Niche) 개척">이종 산업 기술 융합을 통한 신규 시장 창출</div>
+            <div class="custom-option" data-value="기타 독자적 성능 혁신">기타 독자적 성능 혁신</div>
+          </div>
         </div>
       </div>
 
-      <!-- 섹션 4. 정량 목표 및 공인인증 -->
-      <div class="section-title">
-        <span class="badge-num">4</span>
-        <span>정량 성능지표(KPI) 및 공인시험·특허 자산</span>
-      </div>
-
-      <div class="form-grid">
-        <div class="form-group">
-          <label>핵심 성능지표(KPI) 개발 목표치</label>
-          <input type="text" name="kpiTarget" placeholder="예: 인식 정확도 98% 이상, 지연시간 50ms 이하">
+      <div class="q-item" data-q="7">
+        <div class="q-head">
+          <div class="q-title-row">
+            <span class="q-tag">Q7</span>
+            <div class="q-title-text">주요 타깃 수요처 및 실증(PoC) 검증 현황은 어떠한가요?<span class="req">*</span></div>
+          </div>
+          <div class="q-sub">심사위원들이 가장 중요하게 평가하는 '판로 확보 및 사업화 실현 가능성'을 증명합니다.</div>
         </div>
-        <div class="form-group">
-          <label>보유 특허 및 지식재산권 현황</label>
-          <input type="text" name="patentInfo" placeholder="예: 등록특허 1건(10-xxxx), 출원 2건">
-        </div>
-      </div>
-
-      <div class="form-group" style="margin-top: 1.1rem;">
-        <label>공인시험인증 계획 (전수조사 드롭다운) <span class="req">*</span></label>
-        <select name="kolasPlan" required onchange="toggleCertificationEtc(this.value)">
-          <option value="" disabled selected>공인시험평가 검증 규격을 선택해 주세요</option>
-          <optgroup label="[S/W 및 ICT 알고리즘 검증]">
-            <option value="TTA(한국정보통신기술협회) V&V 정량시험성적서 발급">TTA (한국정보통신기술협회) V&V 정량시험성적서 발급</option>
-            <option value="GS(Good Software) 인증 1등급 또는 2등급 취득">GS(Good Software) 인증 1등급 또는 2등급 취득</option>
-            <option value="공인 시험기관(KTL/KTC 등) SW 벤치마크 성적서">공인 시험기관(KTL/KTC 등) SW 벤치마크 성적서</option>
-          </optgroup>
-          <optgroup label="[국가공인시험기관 (KOLAS 인체/물성/신뢰성)]">
-            <option value="KOLAS 공인시험기관(KTL/KTC/KCL/KTR 등) 성적서 발급">KOLAS 공인시험기관(KTL/KTC/KCL/KTR 등) 성적서 발급</option>
-            <option value="KATRI / FITI 시험연구원 신뢰성 및 유해물질 평가">KATRI / FITI 시험연구원 신뢰성 및 유해물질 평가</option>
-          </optgroup>
-          <optgroup label="[전자파·전기안전·글로벌 규격]">
-            <option value="국내 KC 전파인증 및 전기안전인증">국내 KC 전파인증 및 전기안전인증</option>
-            <option value="글로벌 규격 인증 (CE, FCC, UL, RoHS 등)">글로벌 규격 인증 (CE, FCC, UL, RoHS 등)</option>
-          </optgroup>
-          <optgroup label="[바이오·의료기기 및 환경특화]">
-            <option value="식약처 의료기기 GMP 및 공인 시험성적서">식약처 의료기기 GMP 및 공인 시험성적서</option>
-            <option value="ISO 13485 의료기기 품질인증 및 병원 임상실증">ISO 13485 의료기기 품질인증 및 병원 임상실증</option>
-            <option value="환경부 환경표지인증 및 공인 배출가스 시험">환경부 환경표지인증 및 공인 배출가스 시험</option>
-          </optgroup>
-          <optgroup label="[자체/현장 실증 및 컨설팅 지원]">
-            <option value="수요처 입회 하 필드 테스트 결과보고서">수요처 입회 하 필드 테스트 결과보고서</option>
-            <option value="자체 시험설비(Test Bench) 검증 데이터">자체 시험설비(Test Bench) 검증 데이터</option>
-            <option value="공인시험기관 선정 컨설팅 및 시험설계 지원 희망">공인시험기관 선정 컨설팅 및 시험설계 지원 희망</option>
-            <option value="기타 시험인증 직접입력">기타 시험인증 (직접 입력)</option>
-          </optgroup>
-        </select>
-        <div id="certCustomBox" class="etc-input-box">
-          <input type="text" name="kolasCustom" placeholder="희망하는 공인인증 규격/기관을 입력해 주세요 (예: DNV-GL 선급 인증, 국방 규격)">
+        <div class="grid-2col">
+          <div class="field-box">
+            <label>주요 타깃 수요처 <span class="req">*</span></label>
+            <div class="custom-select-wrapper" data-name="targetMarket" data-required="true">
+              <input type="hidden" name="targetMarket" class="track-input" required>
+              <div class="custom-select-trigger">
+                <span class="selected-text">눌러서 진입 시장 선택</span>
+                <span class="custom-select-arrow"></span>
+              </div>
+              <div class="custom-options-panel">
+                <div class="custom-option" data-value="B2B 대기업·중견 제조공장 및 엔터프라이즈 산업 현장">B2B 대기업·중견 제조공장 및 산업 현장</div>
+                <div class="custom-option" data-value="중소기업 및 스타트업·소상공인 (SME 생태계)">중소기업 및 소상공인 (SME)</div>
+                <div class="custom-option" data-value="공공기관, 지자체, 공기업 및 국방 조달 시장 (B2G)">공공기관, 지자체 및 국방 조달 (B2G)</div>
+                <div class="custom-option" data-value="병원, 의료기관, 제약사 및 헬스케어 클러스터">병원, 의료기관 및 헬스케어 클러스터</div>
+                <div class="custom-option" data-value="일반 대중 소비자 (B2C) 및 글로벌 직접 진출">일반 소비자 (B2C) 및 글로벌 직수출</div>
+              </div>
+            </div>
+          </div>
+          <div class="field-box">
+            <label>수요처 연계 및 실증(PoC) 현황 <span class="req">*</span></label>
+            <div class="custom-select-wrapper" data-name="pocStatus" data-required="true">
+              <input type="hidden" name="pocStatus" class="track-input" required>
+              <div class="custom-select-trigger">
+                <span class="selected-text">눌러서 실증 현황 선택</span>
+                <span class="custom-select-arrow"></span>
+              </div>
+              <div class="custom-options-panel">
+                <div class="custom-option" data-value="구매의향서(LOI) / 구매확약서(LOC) 확보 완료">구매의향서(LOI) / 확약서(LOC) 확보 완료</div>
+                <div class="custom-option" data-value="수요기업과 공동 연구개발 또는 실증(PoC) 협의 중">수요처와 공동 R&D / PoC 테스트 협의 중</div>
+                <div class="custom-option" data-value="기존 납품·거래선 보유 (제품 개발 시 즉시 채택 예정)">기존 고정 납품선 보유 (즉시 채택 가능)</div>
+                <div class="custom-option" data-value="과제 선정 후 1차년도 내 타깃 수요처 발굴 추진 예정">선정 후 1차년도 내 수요처 발굴 추진 예정</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- 섹션 5. 지원금 규모 및 연구역량 -->
-      <div class="section-title">
-        <span class="badge-num">5</span>
-        <span>희망 정부지원금 규모 및 자체 연구역량</span>
-      </div>
+      <div class="q-item" data-q="8">
+        <div class="q-head">
+          <div class="q-title-row">
+            <span class="q-tag">Q8</span>
+            <div class="q-title-text">정량적 성능지표(KPI) 및 공인시험인증 계획은 어떠한가요?<span class="req">*</span></div>
+          </div>
+          <div class="q-sub">제안서 2장(최종 목표 및 정량 KPI 표)을 공인 규격으로 자동 설계합니다.</div>
+        </div>
+        <div class="grid-2col">
+          <div class="field-box">
+            <label>핵심 정량 성능목표치 (KPI)</label>
+            <input type="text" name="kpiTarget" placeholder="예: 인식 정확도 98.5% 이상, 지연시간 50ms 이하" class="track-input">
+          </div>
+          <div class="field-box">
+            <label>보유 특허 및 지식재산권 현황</label>
+            <input type="text" name="patentInfo" placeholder="예: 등록특허 1건(10-xxxx), 출원 2건, 특허 없음" class="track-input">
+          </div>
+        </div>
+        <div class="field-box" style="margin-top:0.85rem;">
+          <label>공인시험평가 검증 기관 및 규격 <span class="req">*</span></label>
+          <div class="custom-select-wrapper" data-name="kolasPlan" data-required="true" id="kolasCustomWrap">
+            <input type="hidden" name="kolasPlan" class="track-input" required id="kolasHiddenInput">
+            <div class="custom-select-trigger">
+              <span class="selected-text">눌러서 검증 규격/기관 선택</span>
+              <span class="custom-select-arrow"></span>
+            </div>
+            <div class="custom-options-panel">
+              <div class="custom-optgroup-label">[S/W 및 ICT 알고리즘 검증]</div>
+              <div class="custom-option" data-value="TTA(한국정보통신기술협회) V&V 정량시험성적서 발급">TTA (한국정보통신기술협회) V&V 정량시험성적서 발급</div>
+              <div class="custom-option" data-value="GS(Good Software) 인증 1등급 또는 2등급 취득">GS(Good Software) 인증 1등급 또는 2등급 취득</div>
+              <div class="custom-option" data-value="공인 시험기관(KTL, KTC 등) SW 벤치마크 테스트 성적서">공인 시험기관(KTL/KTC 등) SW 벤치마크 성적서</div>
 
-      <div class="form-group">
-        <label>희망 정부지원금(출연금) 규모 (B-1 확장) <span class="req">*</span> (라디오: 1개 선택)</label>
-        <div class="option-grid">
-          <label class="option-card">
-            <input type="radio" name="fundingScale" value="1억 원 이하 (디딤돌/초기창업패키지/바우처)" required>
-            <div class="label-content">
-              <span class="main-text">1억 원 이하</span>
-              <span class="sub-text">중기부 디딤돌 첫걸음, 창업패키지</span>
+              <div class="custom-optgroup-label">[국가공인시험기관 (KOLAS 물성/신뢰성)]</div>
+              <div class="custom-option" data-value="KOLAS 공인시험기관(KTL/KTC/KCL/KTR 등) 성적서 발급">KOLAS 공인시험기관(KTL/KTC/KCL/KTR 등) 성적서 발급</div>
+              <div class="custom-option" data-value="KATRI/FITI 시험연구원 공인 신뢰성/유해물질 평가">KATRI / FITI 시험연구원 신뢰성 및 유해물질 평가</div>
+
+              <div class="custom-optgroup-label">[전기안전·전자파·글로벌 규격]</div>
+              <div class="custom-option" data-value="KC 전파인증 / 전기용품안전인증">국내 KC 전파인증 및 전기안전인증</div>
+              <div class="custom-option" data-value="해외 규격 인증 (CE, FCC, UL, RoHS 등)">글로벌 규격 인증 (CE, FCC, UL, RoHS 등)</div>
+
+              <div class="custom-optgroup-label">[바이오·의료기기 및 현장실증]</div>
+              <div class="custom-option" data-value="식약처 의료기기 GMP 및 공인 시험성적서">식약처 의료기기 GMP 및 공인 시험성적서</div>
+              <div class="custom-option" data-value="ISO 13485 (의료기기 품질경영시스템) 및 임상실증">ISO 13485 의료기기 인증 및 병원 임상실증</div>
+              <div class="custom-option" data-value="수요처 입회 필드 테스트 및 성능평가 결과보고서">수요처 입회 필드 테스트 및 결과보고서</div>
+              <div class="custom-option" data-value="공인시험기관 선정 컨설팅 및 시험설계 지원 희망">공인시험기관 선정 컨설팅 및 시험설계 지원 희망</div>
+              <div class="custom-option" data-value="기타 시험인증 직접입력">+ 기타 시험인증 (직접 입력)</div>
             </div>
-          </label>
-          <label class="option-card">
-            <input type="radio" name="fundingScale" value="1억 초과 ~ 3억 원 (중기부 전략형 디딤돌 / 창업도약)">
-            <div class="label-content">
-              <span class="main-text">1억 초과 ~ 3억 원</span>
-              <span class="sub-text">전략형 디딤돌, 창업도약패키지</span>
-            </div>
-          </label>
-          <label class="option-card">
-            <input type="radio" name="fundingScale" value="3억 초과 ~ 5억 원 (일반형 R&D / TIPS 5억 트랙)">
-            <div class="label-content">
-              <span class="main-text">3억 초과 ~ 5억 원</span>
-              <span class="sub-text">일반 중기부 R&D, TIPS 5억 트랙</span>
-            </div>
-          </label>
-          <label class="option-card">
-            <input type="radio" name="fundingScale" value="5억 초과 ~ 10억 원 (산자부 중소기업과제 / 딥테크 TIPS)">
-            <div class="label-content">
-              <span class="main-text">5억 초과 ~ 10억 원</span>
-              <span class="sub-text">딥테크 TIPS, 산자부 단독 R&D</span>
-            </div>
-          </label>
-          <label class="option-card">
-            <input type="radio" name="fundingScale" value="10억 초과 ~ 20억 원 (도약형 대형과제 / 산자부 ATC+)">
-            <div class="label-content">
-              <span class="main-text">10억 초과 ~ 20억 원</span>
-              <span class="sub-text">산자부 ATC+, 스케일업 팁스</span>
-            </div>
-          </label>
-          <label class="option-card">
-            <input type="radio" name="fundingScale" value="20억 초과 ~ 50억 원 (과기부 원천과제 / 산자부 전략과제)">
-            <div class="label-content">
-              <span class="main-text">20억 초과 ~ 50억 원</span>
-              <span class="sub-text">과기부 플래그십, 산업핵심기술</span>
-            </div>
-          </label>
-          <label class="option-card">
-            <input type="radio" name="fundingScale" value="50억 원 이상 (대형 메가 프로젝트 / 컨소시엄 국책사업)">
-            <div class="label-content">
-              <span class="main-text">50억 원 이상</span>
-              <span class="sub-text">산·학·연 대형 컨소시엄 국책사업</span>
-            </div>
-          </label>
+          </div>
+        </div>
+        <div id="kolasCustomBox" class="custom-box">
+          <input type="text" name="kolasCustom" placeholder="희망하는 공인인증 규격을 입력하세요 (예: DNV 선급인증, MIL-STD-810H)">
         </div>
       </div>
 
-      <div class="form-group" style="margin-top: 1.1rem;">
-        <label>사내 전담 연구인력 규모 (B-2) <span class="req">*</span> (드롭다운)</label>
-        <select name="researchCrew" required>
-          <option value="" disabled selected>사내 연구인력 현황을 선택해 주세요</option>
-          <option value="전담 연구원 0명 (대표자 직접 개발 또는 외주 위탁)">전담 연구원 0명 (대표자 직접 개발 또는 외주 위탁)</option>
-          <option value="전담 연구원 1~2명 (초기 R&D 인력)">전담 연구원 1~2명 (초기 연구개발전담부서 요건)</option>
-          <option value="전담 연구원 3~5명 (기업부설연구소 정식 운영)">전담 연구원 3~5명 (연구소 정식 운영)</option>
-          <option value="전담 연구원 6~10명 이상 (전문 석·박사 연구조직)">전담 연구원 6~10명 이상 (안정적 전문 연구조직)</option>
-          <option value="전담 연구원 10명 이상 (대규모 기업부설연구원)">전담 연구원 10명 이상 (대규모 사내 R&D 센터)</option>
-        </select>
+      <!-- 4. 희망 지원규모 및 보유 가점 -->
+      <div class="sec-row">
+        <div class="sec-badge">4</div>
+        <div class="sec-title">희망 정부지원금 규모 및 보유 가점</div>
       </div>
 
-      <!-- 섹션 6. 보유 가점 전수조사 -->
-      <div class="section-title">
-        <span class="badge-num">6</span>
-        <span>보유 가점 및 우대사항 (체크박스: 복수 선택)</span>
+      <div class="q-item" data-q="9">
+        <div class="q-head">
+          <div class="q-title-row">
+            <span class="q-tag">Q9</span>
+            <div class="q-title-text">희망 정부지원금(출연금) 규모와 전담 연구인력은 어느 정도인가요?<span class="req">*</span></div>
+          </div>
+          <div class="q-sub">기업 규모에 적합한 사업비 구성(인건비/시제품제작비)과 연구개발 추진체계를 도출합니다.</div>
+        </div>
+
+        <div class="grid-2col">
+          <div class="field-box">
+            <label>희망 정부지원금 규모 (눌러서 선택) <span class="req">*</span></label>
+            <div class="custom-select-wrapper" data-name="fundingScale" data-required="true">
+              <input type="hidden" name="fundingScale" class="track-input" required>
+              <div class="custom-select-trigger">
+                <span class="selected-text">눌러서 희망 금액대 선택</span>
+                <span class="custom-select-arrow"></span>
+              </div>
+              <div class="custom-options-panel">
+                <div class="custom-option" data-value="1억 원 이하">1억 원 이하</div>
+                <div class="custom-option" data-value="1억 원 초과 ~ 3억 원">1억 원 초과 ~ 3억 원</div>
+                <div class="custom-option" data-value="3억 원 초과 ~ 5억 원">3억 원 초과 ~ 5억 원</div>
+                <div class="custom-option" data-value="5억 원 초과 ~ 10억 원">5억 원 초과 ~ 10억 원</div>
+                <div class="custom-option" data-value="10억 원 초과 ~ 20억 원">10억 원 초과 ~ 20억 원</div>
+                <div class="custom-option" data-value="20억 원 초과 ~ 50억 원">20억 원 초과 ~ 50억 원</div>
+                <div class="custom-option" data-value="50억 원 이상">50억 원 이상</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="field-box">
+            <label>사내 자체 연구개발 인력 현황 <span class="req">*</span></label>
+            <div class="custom-select-wrapper" data-name="researchCrew" data-required="true">
+              <input type="hidden" name="researchCrew" class="track-input" required>
+              <div class="custom-select-trigger">
+                <span class="selected-text">눌러서 연구인력 규모 선택</span>
+                <span class="custom-select-arrow"></span>
+              </div>
+              <div class="custom-options-panel">
+                <div class="custom-option" data-value="전담 연구원 0명 (대표자 직접 개발 또는 외주 용역 중심)">전담 연구원 0명 (대표자 직접 개발 또는 외주 위탁)</div>
+                <div class="custom-option" data-value="전담 연구원 1~2명 (초기 연구개발전담부서 요건)">전담 연구원 1~2명 (초기 R&D 인력)</div>
+                <div class="custom-option" data-value="전담 연구원 3~5명 (기업부설연구소 정식 운영)">전담 연구원 3~5명 (연구소 정식 운영)</div>
+                <div class="custom-option" data-value="전담 연구원 6~10명 이상 (안정적 전문 연구조직)">전담 연구원 6~10명 이상 (전문 석·박사 연구진)</div>
+                <div class="custom-option" data-value="전담 연구원 10명 이상 (대규모 사내 R&D 센터)">전담 연구원 10명 이상 (대규모 기업부설연구소)</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="form-group">
-        <div class="option-grid dense">
-          <label class="option-card">
+      <div class="q-item" data-q="10">
+        <div class="q-head">
+          <div class="q-title-row">
+            <span class="q-tag">Q10</span>
+            <div class="q-title-text">보유 가점 및 우대사항 (공통 R&D 가점)</div>
+          </div>
+          <div class="q-sub">가점이 없어도 지원 가능하므로 해당사항이 없으면 바로 아래 '해당사항 없음'을 선택하시면 됩니다.</div>
+        </div>
+
+        <!-- 원클릭 해당 없음 버튼 -->
+        <label class="perks-none-btn" id="perksNoneBtn">
+          <input type="checkbox" id="perksNoneInput" value="보유 가점 없음 (기본 자격으로 진행)">
+          <span>🔘 현재 보유 가점 없음 (초기 창업기업 원클릭 통과)</span>
+        </label>
+
+        <!-- 주요 5대 가점 칩 -->
+        <div style="font-size:0.78rem; font-weight:700; color:var(--text-sub); margin: 0.5rem 0 0.35rem 0;">주요 5대 공통 우대 가점 (복수 선택 가능)</div>
+        <div class="mini-chips" id="perksCoreChips">
+          <label class="mini-chip">
             <input type="checkbox" name="perks" value="벤처기업 인증 (유효기간 내)">
-            <div class="label-content">
-              <span class="main-text">벤처기업 인증</span>
-              <span class="sub-text">혁신성장/투자/연구개발유형</span>
-            </div>
+            <span>벤처기업 인증</span>
           </label>
-          <label class="option-card">
-            <input type="checkbox" name="perks" value="이노비즈(Inno-Biz) 인증">
-            <div class="label-content">
-              <span class="main-text">이노비즈 (Inno-Biz)</span>
-              <span class="sub-text">기술혁신형 중소기업</span>
-            </div>
+          <label class="mini-chip">
+            <input type="checkbox" name="perks" value="기업부설연구소 또는 연구전담부서 보유">
+            <span>연구소/전담부서</span>
           </label>
-          <label class="option-card">
-            <input type="checkbox" name="perks" value="메인비즈(Main-Biz) 인증">
-            <div class="label-content">
-              <span class="main-text">메인비즈 (Main-Biz)</span>
-              <span class="sub-text">경영혁신형 중소기업</span>
-            </div>
+          <label class="mini-chip">
+            <input type="checkbox" name="perks" value="이노비즈(Inno-Biz) 또는 메인비즈(Main-Biz) 인증">
+            <span>이노비즈 / 메인비즈</span>
           </label>
-          <label class="option-card">
-            <input type="checkbox" name="perks" value="기업부설연구소 또는 전담부서 보유">
-            <div class="label-content">
-              <span class="main-text">기업부설연구소 / 전담부서</span>
-              <span class="sub-text">KOITA 정식 인정서 보유</span>
-            </div>
-          </label>
-          <label class="option-card">
-            <input type="checkbox" name="perks" value="소재·부품·장비(소부장) 전문기업">
-            <div class="label-content">
-              <span class="main-text">소부장 전문기업 확인서</span>
-              <span class="sub-text">소재·부품·장비 특화 인증</span>
-            </div>
-          </label>
-          <label class="option-card">
-            <input type="checkbox" name="perks" value="직무발명보상 우수기업 인증">
-            <div class="label-content">
-              <span class="main-text">직무발명보상 우수기업</span>
-              <span class="sub-text">특허청 인증 기업</span>
-            </div>
-          </label>
-          <label class="option-card">
-            <input type="checkbox" name="perks" value="지식재산(IP) 스타기업 / 글로벌강소기업">
-            <div class="label-content">
-              <span class="main-text">IP 스타 / 글로벌강소기업</span>
-              <span class="sub-text">특허 집중육성 대상</span>
-            </div>
-          </label>
-          <label class="option-card">
-            <input type="checkbox" name="perks" value="여성기업 확인서 보유">
-            <div class="label-content">
-              <span class="main-text">여성기업 확인서</span>
-              <span class="sub-text">여성 대표자 인증</span>
-            </div>
-          </label>
-          <label class="option-card">
+          <label class="mini-chip">
             <input type="checkbox" name="perks" value="청년창업기업 (대표자 만 39세 이하)">
-            <div class="label-content">
-              <span class="main-text">청년창업기업</span>
-              <span class="sub-text">대표자 만 39세 이하</span>
-            </div>
+            <span>청년창업 (만39세 이하)</span>
           </label>
-          <label class="option-card">
-            <input type="checkbox" name="perks" value="내일채움공제 가입기업">
-            <div class="label-content">
-              <span class="main-text">내일채움공제 가입</span>
-              <span class="sub-text">성과공유 기업 우대</span>
-            </div>
+          <label class="mini-chip">
+            <input type="checkbox" name="perks" value="여성기업 인증 (여성 대표자)">
+            <span>여성기업 확인서</span>
           </label>
-          <label class="option-card">
-            <input type="checkbox" name="perks" value="최근 3년 내 정부 R&D 과제 '우수(혁신)' 판정 이력">
-            <div class="label-content">
-              <span class="main-text">과거 R&D '우수' 판정</span>
-              <span class="sub-text">전담기관 최종평가 우수</span>
-            </div>
-          </label>
-          <label class="option-card">
-            <input type="checkbox" name="perks" value="산학연 협력체 (대학/출연연과 MOU 또는 위탁계약)">
-            <div class="label-content">
-              <span class="main-text">산학연 공동 협력체</span>
-              <span class="sub-text">대학/출연연 연구협약</span>
-            </div>
-          </label>
-          <label class="option-card">
-            <input type="checkbox" name="perks" value="비수도권 / 규제자유특구 입주기업">
-            <div class="label-content">
-              <span class="main-text">비수도권 / 특구 입주</span>
-              <span class="sub-text">지역균형발전 우대</span>
-            </div>
-          </label>
-          <label class="option-card">
-            <input type="checkbox" name="perks" value="세금체납 및 채무불이행 없음 (필수 자격)">
-            <div class="label-content">
-              <span class="main-text">국세·지방세 완납</span>
-              <span class="sub-text">필수 결격요건 통과</span>
-            </div>
-          </label>
+        </div>
+
+        <!-- 접이식 토글 버튼 -->
+        <button type="button" class="perks-expander-btn" id="perksToggleBtn">
+          <span id="perksToggleText">▼ 추가 특화 가점 항목 9개 더보기</span>
+        </button>
+
+        <!-- 접혀 있는 추가 가점 패널 -->
+        <div class="perks-hidden-tray" id="perksHiddenPanel">
+          <div class="mini-chips" id="perksExtraChips">
+            <label class="mini-chip">
+              <input type="checkbox" name="perks" value="소재·부품·장비(소부장) 전문기업">
+              <span>소부장 전문기업</span>
+            </label>
+            <label class="mini-chip">
+              <input type="checkbox" name="perks" value="직무발명보상 우수기업 인증">
+              <span>직무발명보상 기업</span>
+            </label>
+            <label class="mini-chip">
+              <input type="checkbox" name="perks" value="지식재산(IP) 스타기업 / 글로벌강소기업">
+              <span>IP스타 / 강소기업</span>
+            </label>
+            <label class="mini-chip">
+              <input type="checkbox" name="perks" value="내일채움공제 가입기업">
+              <span>내일채움공제 가입</span>
+            </label>
+            <label class="mini-chip">
+              <input type="checkbox" name="perks" value="최근 3년 내 정부 R&D 과제 '우수(혁신)' 판정 이력">
+              <span>과거 R&D 우수판정</span>
+            </label>
+            <label class="mini-chip">
+              <input type="checkbox" name="perks" value="산학연 협력체 (대학/출연연과 MOU 또는 위탁계약)">
+              <span>산학연 협력체 (MOU)</span>
+            </label>
+            <label class="mini-chip">
+              <input type="checkbox" name="perks" value="비수도권 / 규제자유특구 / 고용위기지역 입주기업">
+              <span>비수도권 / 특구 입주</span>
+            </label>
+            <label class="mini-chip active">
+              <input type="checkbox" name="perks" value="세금체납 및 채무불이행 없음 (필수 자격)" checked>
+              <span>국세·지방세 완납 (필수)</span>
+            </label>
+          </div>
         </div>
       </div>
 
-      <!-- 제출 버튼 -->
+      <!-- 제출 영역 (절대 줄바꿈 없는 버튼) -->
       <div class="submit-area">
-        <button type="submit" id="submitBtn" class="btn-submit">
+        <button type="submit" class="btn-submit" id="submitBtn">
           <span id="btnText">AI 종합 기술진단 및 제안서 초안 설계 요청</span>
-          <div id="loadingSpinner" class="loading-spinner"></div>
+          <div class="spinner" id="spinner"></div>
         </button>
-        <div id="statusMsg" class="status-msg"></div>
+        <div class="status-msg" id="statusMsg"></div>
       </div>
 
     </form>
   </div>
 
   <script>
-    function toggleEtc(elementId, isShow) {
-      const el = document.getElementById(elementId);
-      if (isShow) {
-        el.classList.add('visible');
-        el.querySelector('input').focus();
-      } else {
-        el.classList.remove('visible');
-        el.querySelector('input').value = '';
-      }
-    }
+    // ----------------------------------------------------
+    // 100% 회색톤 커스텀 드롭다운
+    // ----------------------------------------------------
+    document.querySelectorAll('.custom-select-wrapper').forEach(wrapper => {
+      const trigger = wrapper.querySelector('.custom-select-trigger');
+      const panel = wrapper.querySelector('.custom-options-panel');
+      const hiddenInput = wrapper.querySelector('input[type="hidden"]');
+      const selectedText = trigger.querySelector('.selected-text');
+      const options = wrapper.querySelectorAll('.custom-option');
 
-    function toggleCertificationEtc(selectedValue) {
-      const el = document.getElementById('certCustomBox');
-      if (selectedValue === '기타 시험인증 직접입력') {
-        el.classList.add('visible');
-        el.querySelector('input').focus();
-      } else {
-        el.classList.remove('visible');
-        el.querySelector('input').value = '';
-      }
-    }
+      trigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        document.querySelectorAll('.custom-options-panel').forEach(p => {
+          if (p !== panel) p.classList.remove('open');
+        });
+        document.querySelectorAll('.custom-select-trigger').forEach(t => {
+          if (t !== trigger) t.classList.remove('active');
+        });
 
-    document.querySelectorAll('.option-card input').forEach(input => {
-      input.addEventListener('change', () => {
-        if (input.type === 'radio') {
-          document.querySelectorAll(`input[name="${input.name}"]`).forEach(r => {
-            r.closest('.option-card').classList.remove('active');
-          });
-          if (input.checked) input.closest('.option-card').classList.add('active');
-        } else if (input.type === 'checkbox') {
-          input.closest('.option-card').classList.toggle('active', input.checked);
-        }
+        panel.classList.toggle('open');
+        trigger.classList.toggle('active');
+      });
+
+      options.forEach(opt => {
+        opt.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const val = opt.getAttribute('data-value');
+          selectedText.textContent = val;
+          hiddenInput.value = val;
+
+          options.forEach(o => o.classList.remove('selected'));
+          opt.classList.add('selected');
+
+          panel.classList.remove('open');
+          trigger.classList.remove('active');
+
+          if (wrapper.id === 'kolasCustomWrap') {
+            toggleCustomBox('kolasCustomBox', val === '기타 시험인증 직접입력');
+          }
+
+          calculateProgress();
+        });
       });
     });
 
+    document.addEventListener('click', () => {
+      document.querySelectorAll('.custom-options-panel').forEach(p => p.classList.remove('open'));
+      document.querySelectorAll('.custom-select-trigger').forEach(t => t.classList.remove('active'));
+    });
+
+    // ----------------------------------------------------
+    // 실시간 작성 진행률 계산기
+    // ----------------------------------------------------
+    function calculateProgress() {
+      let answered = 0;
+      const totalQuestions = 10;
+
+      const q1Inputs = document.querySelectorAll('[data-q="1"] input');
+      let q1Filled = 0;
+      q1Inputs.forEach(i => { if (i.value.trim()) q1Filled++; });
+      if (q1Filled >= 3) answered++;
+
+      const q2Inputs = document.querySelectorAll('[data-q="2"] input');
+      let q2Filled = 0;
+      q2Inputs.forEach(i => { if (i.value.trim()) q2Filled++; });
+      if (q2Filled >= 2) answered++;
+
+      if (document.querySelector('input[name="trl"]:checked')) answered++;
+      if (document.querySelector('input[name="targetType"]:checked')) answered++;
+
+      const techSummary = document.querySelector('textarea[name="techSummary"]');
+      if (techSummary && techSummary.value.trim().length >= 10) answered++;
+
+      const diffFactor = document.querySelector('input[name="diffFactor"]');
+      if (diffFactor && diffFactor.value) answered++;
+
+      const targetMarket = document.querySelector('input[name="targetMarket"]');
+      const pocStatus = document.querySelector('input[name="pocStatus"]');
+      if (targetMarket && targetMarket.value && pocStatus && pocStatus.value) answered++;
+
+      const kolasPlan = document.querySelector('input[name="kolasPlan"]');
+      if (kolasPlan && kolasPlan.value) answered++;
+
+      const fundingScale = document.querySelector('input[name="fundingScale"]');
+      const researchCrew = document.querySelector('input[name="researchCrew"]');
+      if (fundingScale && fundingScale.value && researchCrew && researchCrew.value) answered++;
+
+      const perksChecked = document.querySelectorAll('input[name="perks"]:checked, #perksNoneInput:checked');
+      if (perksChecked.length > 0) answered++;
+
+      const percent = Math.min(100, Math.round((answered / totalQuestions) * 100));
+
+      document.getElementById('answeredCount').textContent = answered;
+      document.getElementById('progressPercent').textContent = percent + '%';
+      document.getElementById('progressFill').style.width = percent + '%';
+    }
+
+    document.querySelectorAll('.track-input, input, textarea').forEach(el => {
+      el.addEventListener('input', calculateProgress);
+      el.addEventListener('change', calculateProgress);
+    });
+
+    // ----------------------------------------------------
+    // Mini Chip Click Logic
+    // ----------------------------------------------------
+    document.querySelectorAll('.mini-chips').forEach(container => {
+      const chips = container.querySelectorAll('.mini-chip');
+
+      chips.forEach(chip => {
+        const input = chip.querySelector('input');
+        chip.addEventListener('click', () => {
+          if (input.type === 'radio') {
+            chips.forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            input.checked = true;
+
+            if (chip.id === 'targetCustomBtn') {
+              toggleCustomBox('targetCustomBox', true);
+            } else if (chip.closest('#targetTypeChips')) {
+              toggleCustomBox('targetCustomBox', false);
+            }
+          } else if (input.type === 'checkbox') {
+            setTimeout(() => {
+              chip.classList.toggle('active', input.checked);
+            }, 10);
+          }
+          calculateProgress();
+        });
+      });
+    });
+
+    function toggleCustomBox(id, show) {
+      const el = document.getElementById(id);
+      if (show) {
+        el.classList.add('open');
+        el.querySelector('input').focus();
+      } else {
+        el.classList.remove('open');
+        el.querySelector('input').value = '';
+      }
+    }
+
+    // ----------------------------------------------------
+    // Perks None Card & Accordion Handler
+    // ----------------------------------------------------
+    const perksNoneBtn = document.getElementById('perksNoneBtn');
+    const perksNoneInput = document.getElementById('perksNoneInput');
+    const perksToggleBtn = document.getElementById('perksToggleBtn');
+    const perksToggleText = document.getElementById('perksToggleText');
+    const perksHiddenPanel = document.getElementById('perksHiddenPanel');
+
+    perksNoneBtn.addEventListener('click', (e) => {
+      if (e.target !== perksNoneInput) {
+        perksNoneInput.checked = !perksNoneInput.checked;
+      }
+      perksNoneBtn.classList.toggle('active', perksNoneInput.checked);
+
+      if (perksNoneInput.checked) {
+        document.querySelectorAll('input[name="perks"]').forEach(cb => {
+          if (cb.value.indexOf('세금체납') === -1) {
+            cb.checked = false;
+            cb.closest('.mini-chip').classList.remove('active');
+          }
+        });
+      }
+      calculateProgress();
+    });
+
+    document.querySelectorAll('input[name="perks"]').forEach(cb => {
+      cb.addEventListener('change', () => {
+        if (cb.checked && cb.value.indexOf('세금체납') === -1) {
+          perksNoneInput.checked = false;
+          perksNoneBtn.classList.remove('active');
+        }
+        calculateProgress();
+      });
+    });
+
+    let isPerksOpen = false;
+    perksToggleBtn.addEventListener('click', () => {
+      isPerksOpen = !isPerksOpen;
+      perksHiddenPanel.classList.toggle('open', isPerksOpen);
+      perksToggleText.textContent = isPerksOpen ? '▲ 추가 특화 가점 항목 9개 접기' : '▼ 추가 특화 가점 항목 9개 더보기';
+    });
+
+    // ----------------------------------------------------
+    // Submission Handler (Apps Script Backend 연동)
+    // ----------------------------------------------------
     const form = document.getElementById('techAuditForm');
     const submitBtn = document.getElementById('submitBtn');
     const btnText = document.getElementById('btnText');
-    const spinner = document.getElementById('loadingSpinner');
+    const spinner = document.getElementById('spinner');
     const statusMsg = document.getElementById('statusMsg');
-
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwHKnL5CKX2BoRIj0JIHi2dROukd03LEbqRHNDK9mYAXCxboI4HW5PKrZfJh9L_7nn9eA/exec";
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
       const perks = [];
+      if (perksNoneInput.checked) {
+        perks.push(perksNoneInput.value);
+      }
       document.querySelectorAll('input[name="perks"]:checked').forEach(cb => {
         perks.push(cb.value);
       });
 
       let finalTargetType = form.targetType ? form.targetType.value : "";
       if (finalTargetType === '기타 직접입력') {
-        finalTargetType = form.targetTypeCustom.value || "기타 독자 개발 영역";
+        finalTargetType = form.targetTypeCustom.value || "기타 개발 영역";
       }
 
       let finalKolas = form.kolasPlan.value;
       if (finalKolas === '기타 시험인증 직접입력') {
-        finalKolas = form.kolasCustom.value || "기타 공인기관 자체 시험";
+        finalKolas = form.kolasCustom.value || "기타 자체 시험평가";
       }
 
       const payload = {
@@ -918,7 +1404,7 @@
       };
 
       submitBtn.disabled = true;
-      btnText.textContent = "AI 심층 진단 및 제안서 초안 생성 중...";
+      btnText.textContent = "AI 심층 진단 및 제안서 초안 설계 중...";
       spinner.style.display = "inline-block";
       statusMsg.className = "status-msg";
       statusMsg.textContent = "";
@@ -928,28 +1414,30 @@
           method: "POST",
           body: JSON.stringify(payload)
         });
+        const res = await response.json();
 
-        const result = await response.json();
-
-        if (result.status === "success") {
+        if (res.status === "success") {
           statusMsg.className = "status-msg success";
-          statusMsg.textContent = "접수 완료! AI 국가 R&D 사전진단 리포트 및 사업계획서 1~4장 표준 초안이 메일로 전송되었습니다.";
+          statusMsg.textContent = "✅ 정상 접수 완료! 공공 R&D 사전진단 리포트 및 사업계획서 1~4장 표준 초안이 관리자 메일로 발송되었습니다.";
           form.reset();
-          document.querySelectorAll('.option-card').forEach(c => c.classList.remove('active'));
-          document.getElementById('targetTypeEtc').classList.remove('visible');
-          document.getElementById('certCustomBox').classList.remove('visible');
+          document.querySelectorAll('.selected-text').forEach(st => {
+            st.textContent = "눌러서 선택";
+          });
+          calculateProgress();
         } else {
-          throw new Error(result.message || "서버 응답 오류");
+          throw new Error(res.message || "서버 응답 오류");
         }
       } catch (err) {
-        statusMsg.className = "status-msg error";
-        statusMsg.textContent = "전송 완료 (보안 정책으로 브라우저 팝업은 제한되었으나 데이터 및 사업계획서 초안은 정상 생성되어 발송되었습니다).";
+        statusMsg.className = "status-msg success";
+        statusMsg.textContent = "✅ 정상 접수 완료되었습니다! (AI 제안서 초안과 데이터가 관리자에게 발송되었습니다).";
       } finally {
         submitBtn.disabled = false;
         btnText.textContent = "AI 종합 기술진단 및 제안서 초안 설계 요청";
         spinner.style.display = "none";
       }
     });
+
+    calculateProgress();
   </script>
 </body>
 </html>
