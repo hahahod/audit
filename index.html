@@ -16,24 +16,24 @@
       --card-border: #e2e8f0;
       --q-bg: #f8fafc;
       --q-border: #cbd5e1;
-      
+
       --sky: #0284c7;
       --sky-hover: #0369a1;
       --sky-soft: #e0f2fe;
       --sky-border: #93c5fd;
-      
+
       --text-main: #0f172a;
       --text-sub: #334155;
       --text-muted: #64748b;
-      
+
       --dropdown-bg: #ffffff;
       --dropdown-border: #cbd5e1;
-      
+
       --danger: #ef4444;
       --success-bg: #ecfdf5;
       --success-border: #6ee7b7;
       --success-text: #065f46;
-      
+
       --radius-sm: 8px;
       --radius-md: 12px;
       --radius-lg: 16px;
@@ -1740,12 +1740,63 @@
       const finishSubmission = () => {
         statusMsg.className = "status-msg success";
         statusMsg.innerHTML = "🎉 <b>접수 완료!</b> AI 기술자산화 핀포인트 진단 리포트가 관리자 메일로 정상 전송되었습니다.";
+
+        // 폼 기본값 초기화
         form.reset();
-        fileChosenIndicator.style.display = 'none';
-        document.querySelectorAll('.selected-text').forEach(st => {
-          st.textContent = "눌러서 선택";
+
+        // 커스텀 드롭다운 7개 원래 안내 문구 및 선택 상태 초기화
+        const dropdownPlaceholders = {
+          revenueScale: "눌러서 매출 구간 선택",
+          diffFactor: "눌러서 핵심 개발 동기 선택",
+          targetMarket: "눌러서 진입 시장 선택",
+          pocStatus: "눌러서 실증 현황 선택",
+          kolasPlan: "눌러서 검증 규격/기관 선택",
+          fundingScale: "눌러서 희망 금액대 선택",
+          researchCrew: "눌러서 연구인력 규모 선택"
+        };
+
+        document.querySelectorAll('.custom-select-wrapper').forEach(wrapper => {
+          const name = wrapper.dataset.name;
+          const hiddenInput = wrapper.querySelector('input[type="hidden"]');
+          const selectedText = wrapper.querySelector('.selected-text');
+          const trigger = wrapper.querySelector('.custom-select-trigger');
+          const panel = wrapper.querySelector('.custom-options-panel');
+
+          if (hiddenInput) hiddenInput.value = '';
+          if (selectedText) {
+            selectedText.textContent = dropdownPlaceholders[name] || "눌러서 선택";
+          }
+
+          wrapper.querySelectorAll('.custom-option.selected').forEach(option => {
+            option.classList.remove('selected');
+          });
+
+          if (trigger) trigger.classList.remove('active');
+          if (panel) panel.classList.remove('open');
         });
+
+        // 선택형 칩의 활성 상태 초기화
+        document.querySelectorAll('.mini-chip.active').forEach(chip => {
+          chip.classList.remove('active');
+        });
+
+        // 직접 입력 영역 닫기
+        document.getElementById('targetCustomBox').classList.remove('open');
+        document.getElementById('kolasCustomBox').classList.remove('open');
+
+        // Q10 가점 선택 및 추가 항목 펼침 상태 초기화
+        perksNoneBtn.classList.remove('active');
+        perksHiddenPanel.classList.remove('open');
+        isPerksOpen = false;
+        perksToggleText.textContent = '▼ 추가 특화 가점 항목 8개 더보기';
+
+        // 파일 첨부 표시 초기화
+        fileChosenIndicator.style.display = 'none';
+
+        // 작성률 초기화
         calculateProgress();
+
+        // 제출 버튼 원상복구
         submitBtn.disabled = false;
         btnText.textContent = "AI 종합 기술진단 및 핀포인트 과제 매칭 요청";
         spinner.style.display = "none";
